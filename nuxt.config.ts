@@ -18,7 +18,15 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "shadcn-nuxt",
     "motion-v/nuxt",
+    "nuxt-auth-utils",
   ],
+
+  runtimeConfig: {
+    session: {
+      maxAge: 60 * 60 * 24 * 3, // 3 days
+      password: "",
+    },
+  },
 
   css: ["~/assets/css/tailwind.css"],
   vite: {

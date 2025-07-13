@@ -220,6 +220,37 @@ const menuContainerVariants = {
 
       <!-- Right side -->
       <div class="flex items-center gap-2">
+        <AuthState>
+          <template #default="{ loggedIn, clear }">
+            <Motion
+              v-if="loggedIn"
+              :whileHover="{
+                scale: 1.05,
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+              }"
+              :whileTap="{ scale: 0.95 }"
+              :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
+              <UiButton size="sm" variant="outline" @click="clear"
+                >Logout</UiButton
+              >
+            </Motion>
+            <Motion
+              :whileHover="{
+                scale: 1.05,
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+              }"
+              v-else
+              :whileTap="{ scale: 0.95 }"
+              :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
+              <UiButton size="sm" variant="outline" as-child>
+                <NuxtLink to="/login">Login</NuxtLink>
+              </UiButton>
+            </Motion>
+          </template>
+          <template #placeholder>
+            <UiButton variant="ghost" disabled>Loading...</UiButton>
+          </template>
+        </AuthState>
         <!-- <Motion
           :whileHover="{ scale: 1.05 }"
           :whileTap="{ scale: 0.95 }"
@@ -233,7 +264,9 @@ const menuContainerVariants = {
           :whileTap="{ scale: 0.95 }"
           :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
           <UiButton as-child size="sm" class="text-sm">
-            <NuxtLink href="/contact"><Icon name="lucide:phone" /> Hubungin Kami</NuxtLink>
+            <NuxtLink href="/contact"
+              ><Icon name="lucide:phone" /> Hubungin Kami</NuxtLink
+            >
           </UiButton>
         </Motion>
       </div>
@@ -373,6 +406,37 @@ const menuContainerVariants = {
 
       <!-- Right side -->
       <div class="flex items-center gap-2">
+        <AuthState>
+          <template #default="{ loggedIn, clear }">
+            <Motion
+              v-if="loggedIn"
+              :whileHover="{
+                scale: 1.05,
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+              }"
+              :whileTap="{ scale: 0.95 }"
+              :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
+              <UiButton size="sm" variant="outline" @click="clear"
+                >Logout</UiButton
+              >
+            </Motion>
+            <Motion
+              :whileHover="{
+                scale: 1.05,
+                boxShadow: '0 8px 25px rgba(0,0,0,0.1)',
+              }"
+              v-else
+              :whileTap="{ scale: 0.95 }"
+              :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
+              <UiButton size="sm" variant="outline" as-child>
+                <NuxtLink to="/login">Login</NuxtLink>
+              </UiButton>
+            </Motion>
+          </template>
+          <template #placeholder>
+            <UiButton variant="ghost" disabled>Loading...</UiButton>
+          </template>
+        </AuthState>
         <!-- <Motion
           :whileHover="{ scale: 1.05 }"
           :whileTap="{ scale: 0.95 }"
@@ -386,7 +450,9 @@ const menuContainerVariants = {
           :whileTap="{ scale: 0.95 }"
           :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
           <UiButton as-child size="sm" class="text-sm">
-            <NuxtLink href="/contact"><Icon name="lucide:phone" /> Hubungin Kami</NuxtLink>
+            <NuxtLink href="/contact"
+              ><Icon name="lucide:phone" /> Hubungin Kami</NuxtLink
+            >
           </UiButton>
         </Motion>
       </div>

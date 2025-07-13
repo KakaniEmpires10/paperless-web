@@ -26,13 +26,13 @@ defineProps<{
       title: string
       url: string
     }[]
-  }[]
+  }[],
 }>()
 </script>
 
 <template>
-  <SidebarGroup>
-    <SidebarGroupLabel>Menu Utama</SidebarGroupLabel>
+  <SidebarGroup class="mt-auto">
+    <SidebarGroupLabel>Menu Setting</SidebarGroupLabel>
     <SidebarMenu>
       <template v-for="item in items" :key="item.title">
         <!-- Render collapsible if item has children -->

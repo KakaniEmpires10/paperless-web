@@ -3,29 +3,10 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-vue-next'
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
 
@@ -33,84 +14,79 @@ const props = defineProps<{
   user: {
     name: string
     email: string
-    avatar: string
+    image: string
   }
 }>()
 
 const { isMobile } = useSidebar()
+const { clear: clearSession } = useUserSession()
+
+async function logout(){
+  await clearSession()
+  await navigateTo("/")
+}
 </script>
 
 <template>
-  <SidebarMenu>
-    <SidebarMenuItem>
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <SidebarMenuButton
+  <UiSidebarMenu>
+    <UiSidebarMenuItem>
+      <UiDropdownMenu>
+        <UiDropdownMenuTrigger as-child>
+          <UiSidebarMenuButton
             size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border border-border"
           >
-            <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage :src="user.avatar" :alt="user.name" />
-              <AvatarFallback class="rounded-lg">
+            <UiAvatar class="h-8 w-8 rounded-lg">
+              <UiAvatarImage :src="user.image" :alt="user.name" />
+              <UiAvatarFallback class="rounded-lg">
                 CN
-              </AvatarFallback>
-            </Avatar>
+              </UiAvatarFallback>
+            </UiAvatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
-          </SidebarMenuButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
+          </UiSidebarMenuButton>
+        </UiDropdownMenuTrigger>
+        <UiDropdownMenuContent
           class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
           :side="isMobile ? 'bottom' : 'right'"
           align="end"
           :side-offset="4"
         >
-          <DropdownMenuLabel class="p-0 font-normal">
+          <UiDropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage :src="user.avatar" :alt="user.name" />
-                <AvatarFallback class="rounded-lg">
+              <UiAvatar class="h-8 w-8 rounded-lg">
+                <UiAvatarImage :src="user.image" :alt="user.name" />
+                <UiAvatarFallback class="rounded-lg">
                   CN
-                </AvatarFallback>
-              </Avatar>
+                </UiAvatarFallback>
+              </UiAvatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">{{ user.name }}</span>
                 <span class="truncate text-xs">{{ user.email }}</span>
               </div>
             </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Sparkles />
-              Upgrade to Pro
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
+          </UiDropdownMenuLabel>
+          <UiDropdownMenuSeparator />
+          <UiDropdownMenuGroup>
+            <UiDropdownMenuItem>
               <BadgeCheck />
               Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
+            </UiDropdownMenuItem>
+            <UiDropdownMenuItem>
               <Bell />
               Notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+            </UiDropdownMenuItem>
+          </UiDropdownMenuGroup>
+          <UiDropdownMenuSeparator />
+          <UiDropdownMenuItem @click="logout">
             <LogOut />
             Log out
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </SidebarMenuItem>
-  </SidebarMenu>
+          </UiDropdownMenuItem>
+        </UiDropdownMenuContent>
+      </UiDropdownMenu>
+    </UiSidebarMenuItem>
+  </UiSidebarMenu>
 </template>

@@ -1,178 +1,104 @@
 <script setup lang="ts">
 import type { SidebarProps } from '@/components/ui/sidebar'
-
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from 'lucide-vue-next'
 import NavMain from '@/components/NavMain.vue'
-import NavProjects from '@/components/NavProjects.vue'
 import NavUser from '@/components/NavUser.vue'
-import TeamSwitcher from '@/components/TeamSwitcher.vue'
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar'
+const { session } = useUserSession()
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
 
-// This is sample data.
+const route = useRoute()
+
+// Function to check if a menu item is active
+const isActiveMenuItem = (itemUrl: string, hasChildren: boolean = false) => {
+  if (hasChildren) {
+    // For items with children, check if current route starts with the item URL
+    return route.path.startsWith(itemUrl)
+  } else {
+    // For items without children, check exact match or child routes
+    return route.path === itemUrl || route.path.startsWith(itemUrl + '/')
+  }
+}
+
+// Function to check if a sub-menu item is active
+const isActiveSubMenuItem = (subItemUrl: string) => {
+  return route.path === subItemUrl || route.path.startsWith(subItemUrl + '/')
+}
+
 const data = {
   user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: session.value?.user?.name as string,
+    email: session.value?.user?.email as string,
+    image: session.value?.user?.image || '/placeholder_profile.png',
+    role: session.value?.user?.role
   },
-  teams: [
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free',
-    },
-  ],
   navMain: [
     {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
+      title: 'Dashboard',
+      url: '/dashboard',
+      icon: 'hugeicons:dashboard-square-03',
     },
     {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
+      title: 'Blog',
+      url: '/dashboard/blogs',
+      icon: 'carbon:blog',
     },
     {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
+      title: 'Fitur',
+      url: '/dashboard/features',
+      icon: 'solar:layers-line-duotone',
+    },
+    {
+      title: 'Pricing',
+      url: '/dashboard/prices',
+      icon: 'solar:tag-price-linear',
+    },
+    {
+      title: 'Team',
+      url: '/dashboard/teams',
+      icon: 'fluent:people-team-28-regular',
+    },
+    {
+      title: 'Client',
+      url: '/dashboard/clients',
+      icon: 'ph:handshake-fill',
+    },
+  ],
+  navSettings : [
+    {
+      title: 'Saran',
+      url: '/dashboard/suggestions',
+      icon: 'material-symbols:note-stack-outline-rounded',
     },
     {
       title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
+      url: '/dashboard/settings',
+      icon: 'material-symbols:settings-panorama-outline-rounded',
     },
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
-    },
-  ],
+  ]
 }
 </script>
 
 <template>
-  <Sidebar v-bind="props">
-    <SidebarHeader>
-      <TeamSwitcher :teams="data.teams" />
-    </SidebarHeader>
-    <SidebarContent>
+  <UiSidebar v-bind="props">
+    <UiSidebarHeader>
+      <UiSidebarMenu class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foregroundbg-accent">
+        <UiSidebarMenuItem class="p-2 flex items-center gap-2">
+          <NuxtImg class="w-8" src="/favicon.png" alt="logo" />
+          <span class="truncate font-semibold">Paperless</span>
+        </UiSidebarMenuItem>
+      </UiSidebarMenu>
+    </UiSidebarHeader>
+    <UiSidebarSeparator />
+    <UiSidebarContent>
       <NavMain :items="data.navMain" />
-      <NavProjects :projects="data.projects" />
-    </SidebarContent>
-    <SidebarFooter>
+      <NavSettings :items="data.navSettings" />
+    </UiSidebarContent>
+    <UiSidebarFooter>
       <NavUser :user="data.user" />
-    </SidebarFooter>
-    <SidebarRail />
-  </Sidebar>
+    </UiSidebarFooter>
+    <UiSidebarRail />
+  </UiSidebar>
 </template>
