@@ -11,6 +11,16 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
     },
   },
+
+  nitro: {
+    storage: {
+      upload: {
+        driver: "fs",
+        base: "./public",
+      }
+    }
+  },
+
   modules: [
     "@nuxt/content",
     "@nuxt/fonts",
@@ -19,6 +29,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "motion-v/nuxt",
     "nuxt-auth-utils",
+    "@pinia/nuxt",
   ],
 
   runtimeConfig: {
@@ -26,6 +37,10 @@ export default defineNuxtConfig({
       maxAge: 60 * 60 * 24 * 3, // 3 days
       password: "",
     },
+  },
+
+  imports: {
+    dirs: ["stores"]
   },
 
   css: ["~/assets/css/tailwind.css"],

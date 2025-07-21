@@ -9,24 +9,6 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
 
-const route = useRoute()
-
-// Function to check if a menu item is active
-const isActiveMenuItem = (itemUrl: string, hasChildren: boolean = false) => {
-  if (hasChildren) {
-    // For items with children, check if current route starts with the item URL
-    return route.path.startsWith(itemUrl)
-  } else {
-    // For items without children, check exact match or child routes
-    return route.path === itemUrl || route.path.startsWith(itemUrl + '/')
-  }
-}
-
-// Function to check if a sub-menu item is active
-const isActiveSubMenuItem = (subItemUrl: string) => {
-  return route.path === subItemUrl || route.path.startsWith(subItemUrl + '/')
-}
-
 const data = {
   user: {
     name: session.value?.user?.name as string,
@@ -51,17 +33,17 @@ const data = {
       icon: 'solar:layers-line-duotone',
     },
     {
-      title: 'Pricing',
+      title: 'Paket',
       url: '/dashboard/prices',
       icon: 'solar:tag-price-linear',
     },
     {
-      title: 'Team',
+      title: 'Tim',
       url: '/dashboard/teams',
       icon: 'fluent:people-team-28-regular',
     },
     {
-      title: 'Client',
+      title: 'Klien',
       url: '/dashboard/clients',
       icon: 'ph:handshake-fill',
     },
@@ -73,7 +55,7 @@ const data = {
       icon: 'material-symbols:note-stack-outline-rounded',
     },
     {
-      title: 'Settings',
+      title: 'Pengaturan',
       url: '/dashboard/settings',
       icon: 'material-symbols:settings-panorama-outline-rounded',
     },

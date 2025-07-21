@@ -52,7 +52,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">+6281779777488</p>
+                    <p class="font-medium">{{ settingData?.phoneNumber }}</p>
                   </div>
                 </Motion>
 
@@ -77,7 +77,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">support@uprankly.com</p>
+                    <p class="font-medium">{{ settingData?.email }}</p>
                   </div>
                 </Motion>
 
@@ -102,7 +102,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">Medan, Indonesia</p>
+                    <p class="font-medium">{{ settingData?.address }}</p>
                   </div>
                 </Motion>
               </div>
@@ -124,7 +124,7 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, ease: 'easeOut' }">
           <form class="py-10 px-10 lg:px-16 space-y-6" @submit="onSubmit">
-            <UiFormField v-slot="{ componentField }" name="name">
+            <UiFormField v-slot="{ componentField }" name="name" :validate-on-blur="!form.isFieldDirty">
               <Motion
                 :initial="{ opacity: 0, y: 30 }"
                 :animate="{ opacity: 1, y: 0 }"
@@ -147,7 +147,7 @@
             </UiFormField>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-              <UiFormField v-slot="{ componentField }" name="email">
+              <UiFormField v-slot="{ componentField }" name="email" :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -169,7 +169,7 @@
                 </Motion>
               </UiFormField>
 
-              <UiFormField v-slot="{ componentField }" name="phone">
+              <UiFormField v-slot="{ componentField }" name="phone" :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -193,7 +193,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-              <UiFormField v-slot="{ componentField }" name="hospitalName">
+              <UiFormField v-slot="{ componentField }" name="hospitalName" :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -215,7 +215,7 @@
                 </Motion>
               </UiFormField>
 
-              <UiFormField v-slot="{ componentField }" name="position">
+              <UiFormField v-slot="{ componentField }" name="position" :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -238,7 +238,7 @@
               </UiFormField>
             </div>
 
-            <UiFormField v-slot="{ componentField }" name="message">
+            <UiFormField v-slot="{ componentField }" name="message" :validate-on-blur="!form.isFieldDirty">
               <Motion
                 :initial="{ opacity: 0, y: 30 }"
                 :animate="{ opacity: 1, y: 0 }"
@@ -285,6 +285,10 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { Mail, MapPin, Phone, Send } from "lucide-vue-next";
 import { useForm } from "vee-validate";
 import { z } from "zod";
+
+const { data: settingData } = await useFetch("/api/settings", {
+  pick: ["email", "address", "phoneNumber"]
+});
 
 const contactSchema = toTypedSchema(
   z.object({
