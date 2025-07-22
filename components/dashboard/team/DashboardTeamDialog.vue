@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useObjectUrl } from "@vueuse/core";
 import { LucideImagePlus } from "lucide-vue-next";
-import { useForm } from "vee-validate";
 import { getInitialValues, roleOptions, teamSchema, type Team } from "./team.constant";
 import { toast } from "vue-sonner";
 
@@ -37,7 +36,7 @@ const cardBtn = computed(() => {
 
 const initialValues = computed(() => getInitialValues(props.team));
 
-const bioText = ref(initialValues.value.bio || "");
+const bioText = computed(() => (initialValues.value.bio));
 const maxLength = 250;
 
 const charactersRemaining = computed(() => maxLength - bioText.value.length);

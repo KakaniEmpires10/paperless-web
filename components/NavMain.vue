@@ -28,6 +28,16 @@ defineProps<{
     }[]
   }[]
 }>()
+
+const route = useRoute();
+
+const activeRoute = (url: string) => {
+  if(url === route.path){
+    return true
+  }
+
+  return false
+}
 </script>
 
 <template>
@@ -44,7 +54,7 @@ defineProps<{
         >
           <SidebarMenuItem>
             <CollapsibleTrigger as-child>
-              <SidebarMenuButton :tooltip="item.title">
+              <SidebarMenuButton :is-active="activeRoute(item.url)" :tooltip="item.title">
                 <Icon :name="item.icon" class="icon" v-if="item.icon" />
                 <span>{{ item.title }}</span>
                 <ChevronRight class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -66,7 +76,7 @@ defineProps<{
         
         <!-- Render simple menu button if item has no children -->
         <SidebarMenuItem v-else>
-          <SidebarMenuButton :tooltip="item.title" as-child>
+          <SidebarMenuButton :is-active="activeRoute(item.url)" :tooltip="item.title" as-child>
             <NuxtLink :to="item.url">
               <Icon :name="item.icon" class="icon" v-if="item.icon" />
               <span>{{ item.title }}</span>

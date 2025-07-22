@@ -42,11 +42,11 @@
                       scale: 1.1,
                       backgroundColor: 'rgba(255,255,255,0.3)',
                     }"
-                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300">
+                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300 shrink-0">
                     <Motion
                       :whileHover="{
                         y: [-2, 0, -2],
-                        transition: { repeat: Infinity, duration: 0.6 },
+                        transition: { repeat: Infinity, duration: 1 },
                       }">
                       <Phone class="size-4" />
                     </Motion>
@@ -67,11 +67,11 @@
                       scale: 1.1,
                       backgroundColor: 'rgba(255,255,255,0.3)',
                     }"
-                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300">
+                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300 shrink-0">
                     <Motion
                       :whileHover="{
                         y: [-2, 0, -2],
-                        transition: { repeat: Infinity, duration: 0.6 },
+                        transition: { repeat: Infinity, duration: 1 },
                       }">
                       <Mail class="size-4" />
                     </Motion>
@@ -92,11 +92,11 @@
                       scale: 1.1,
                       backgroundColor: 'rgba(255,255,255,0.3)',
                     }"
-                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300">
+                    class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-colors duration-300 shrink-0">
                     <Motion
                       :whileHover="{
                         y: [-2, 0, -2],
-                        transition: { repeat: Infinity, duration: 0.6 },
+                        transition: { repeat: Infinity, duration: 1 },
                       }">
                       <MapPin class="size-4" />
                     </Motion>
