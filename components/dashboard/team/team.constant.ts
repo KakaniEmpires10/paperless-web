@@ -1,6 +1,6 @@
 import { toTypedSchema } from "@vee-validate/zod";
-import type { Team as TeamSchema } from "~/server/db/schema";
 import { z } from "zod";
+import type { Team } from "~/server/db/schema";
 
 export const roleOptions = [
   { label: "CEO", value: "CEO" },
@@ -36,12 +36,6 @@ export type TeamFilters = {
   search: string;
   role: string[];
   status: boolean | null; // null means "All"
-};
-
-// Utility type to convert Date fields to string in Team
-export type Team = Omit<TeamSchema, "createdAt" | "updatedAt"> & {
-  createdAt: string;
-  updatedAt: string;
 };
 
 export const teamSchema = toTypedSchema(

@@ -1,5 +1,5 @@
 <template>
-  <UiCard class="p-4 flex-row justify-between">
+  <UiCard class="p-4 flex-row justify-between items-center">
     <div class="flex gap-4 items-end">
       <!-- Search -->
       <div class="relative">
@@ -180,7 +180,7 @@
     </div>
 
     <!-- Actions -->
-    <div class="flex gap-2 justify-end mt-2">
+    <div class="flex gap-2 justify-end">
       <UiButton variant="outline" @click="$emit('resetFilters')"
         ><Icon name="material-symbols-light:filter-alt-off" class="text-base" />
         Reset</UiButton
@@ -196,7 +196,8 @@
 <script lang="ts" setup>
 import { CheckIcon } from "lucide-vue-next";
 import { cn } from "~/lib/utils";
-import { roleOptions, type Team, type TeamFilters } from "./team.constant";
+import { roleOptions, type TeamFilters } from "./team.constant";
+import type { Team } from "~/server/db/schema";
 
 const props = defineProps<{
   filters: TeamFilters

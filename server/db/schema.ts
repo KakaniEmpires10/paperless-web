@@ -1,8 +1,4 @@
-import {
-  InferInsertModel,
-  InferSelectModel,
-  relations,
-} from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 import {
   mysqlTable,
   serial,
@@ -21,7 +17,9 @@ import { createId } from "@paralleldrive/cuid2";
 // ==============================
 
 export const users = mysqlTable("users", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
@@ -65,7 +63,9 @@ export const settings = mysqlTable("settings", {
 // ==============================
 
 export const team = mysqlTable("team", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
   position: varchar("position", { length: 255 }).notNull(),
   photo: varchar("photo", { length: 255 }),
@@ -86,7 +86,9 @@ export const team = mysqlTable("team", {
 // ==============================
 
 export const blogCategories = mysqlTable("blog_categories", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
@@ -97,7 +99,9 @@ export const blogCategories = mysqlTable("blog_categories", {
 // ==============================
 
 export const blogPosts = mysqlTable("blog_posts", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   title: varchar("title", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).unique().notNull(),
   excerpt: text("excerpt"),
@@ -127,7 +131,9 @@ export const blogPostCategories = mysqlTable("blog_post_categories", {
 // ==============================
 
 export const blogComments = mysqlTable("blog_comments", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   postId: varchar("post_id", { length: 128 }).notNull(),
   parentId: varchar("parent_id", { length: 128 }),
   authorName: varchar("author_name", { length: 255 }).notNull(),
@@ -145,7 +151,9 @@ export const blogComments = mysqlTable("blog_comments", {
 // ==============================
 
 export const features = mysqlTable("features", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   title: varchar("title", { length: 255 }).notNull(),
   category: varchar("category", { length: 255 }).notNull(),
   icon: varchar("icon", { length: 100 }),
@@ -160,11 +168,32 @@ export const features = mysqlTable("features", {
 });
 
 // ==============================
+// Clients
+// ==============================
+
+export const clients = mysqlTable("clients", {
+  id: varchar("id", { length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 20 }),
+  address: text("address"),
+  pricingPlanId: varchar("pricing_plan_id", { length: 128 }).notNull(),
+
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+});
+
+// ==============================
 // Pricing Plans
 // ==============================
 
 export const pricingPlans = mysqlTable("pricing_plans", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   type: varchar("type", { length: 100 }).notNull(),
@@ -181,7 +210,9 @@ export const pricingPlans = mysqlTable("pricing_plans", {
 // ==============================
 
 export const suggestions = mysqlTable("suggestions", {
-  id: varchar({ length: 128 }).primaryKey().$defaultFn(() => createId()),
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   userId: varchar("user_id", { length: 128 }).notNull(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
@@ -240,11 +271,24 @@ export const blogCommentsRelations = relations(
   })
 );
 
+// === pricing Relations ===
+export const pricingPlansRelations = relations(pricingPlans, ({ many }) => ({
+  clients: many(clients),
+}));
+
 // === suggentions Relations ===
 export const suggestionsRelations = relations(suggestions, ({ one }) => ({
   users: one(users, {
     fields: [suggestions.userId],
     references: [users.id],
+  }),
+}));
+
+// === clients Relations ===
+export const clientsRelations = relations(clients, ({ one }) => ({
+  pricingPlan: one(pricingPlans, {
+    fields: [clients.pricingPlanId],
+    references: [pricingPlans.id],
   }),
 }));
 
@@ -254,17 +298,23 @@ export const usersRelations = relations(users, ({ many }) => ({
   suggestions: many(suggestions),
 }));
 
+type SerializedDate<T> = Omit<T, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
+};
+
 // Select types (when reading from the DB)
-export type User = InferSelectModel<typeof users>;
-export type BlogPost = InferSelectModel<typeof blogPosts>;
-export type BlogCategory = InferSelectModel<typeof blogCategories>;
-export type BlogComment = InferSelectModel<typeof blogComments>;
-export type BlogPostCategory = InferSelectModel<typeof blogPostCategories>;
-export type Setting = InferSelectModel<typeof settings>;
-export type Team = InferSelectModel<typeof team>;
-export type Feature = InferSelectModel<typeof features>;
-export type PricingPlan = InferSelectModel<typeof pricingPlans>;
-export type Suggestion = InferSelectModel<typeof suggestions>;
+export type User = SerializedDate<InferSelectModel<typeof users>>;
+export type BlogPost = SerializedDate<InferSelectModel<typeof blogPosts>>;
+export type BlogCategory = SerializedDate<InferSelectModel<typeof blogCategories>>;
+export type BlogComment = SerializedDate<InferSelectModel<typeof blogComments>>;
+export type BlogPostCategory = SerializedDate<InferSelectModel<typeof blogPostCategories>>;
+export type Setting = SerializedDate<InferSelectModel<typeof settings>>;
+export type Team = SerializedDate<InferSelectModel<typeof team>>;
+export type Feature = SerializedDate<InferSelectModel<typeof features>>;
+export type PricingPlan = SerializedDate<InferSelectModel<typeof pricingPlans>>;
+export type Suggestion = SerializedDate<InferSelectModel<typeof suggestions>>;
+export type Client = SerializedDate<InferSelectModel<typeof clients>>;
 
 // Insert types (when inserting into the DB)
 export type NewUser = InferInsertModel<typeof users>;
@@ -277,3 +327,4 @@ export type NewTeam = InferInsertModel<typeof team>;
 export type NewFeature = InferInsertModel<typeof features>;
 export type NewPricingPlan = InferInsertModel<typeof pricingPlans>;
 export type NewSuggestion = InferInsertModel<typeof suggestions>;
+export type NewClient = InferInsertModel<typeof clients>;

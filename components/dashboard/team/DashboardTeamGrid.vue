@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
-    <!-- Loading State -->
-    <div v-if="status === 'pending'" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <!-- Loading State - Show when pending -->
+    <div v-if="pending" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <UiCard 
         v-for="i in 8" 
         :key="`skeleton-${i}`" 
@@ -28,7 +28,7 @@
     </div>
 
     <!-- Error State -->
-    <UiCard v-else-if="status === 'error'" class="p-6 text-center">
+    <UiCard v-else-if="error" class="p-6 text-center">
       <div class="space-y-4">
         <div class="mx-auto w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center">
           <svg 
@@ -55,8 +55,10 @@
           @click="$emit('refresh')" 
           variant="outline" 
           class="mx-auto"
+          :disabled="pending"
         >
           <svg 
+            v-if="!pending"
             class="w-4 h-4 mr-2" 
             fill="none" 
             stroke="currentColor" 
@@ -69,14 +71,23 @@
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
-          Try Again
+          <svg 
+            v-else
+            class="w-4 h-4 mr-2 animate-spin" 
+            fill="none" 
+            viewBox="0 0 24 24"
+          >
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          {{ pending ? 'Memuat...' : 'Try Again' }}
         </UiButton>
       </div>
     </UiCard>
 
     <!-- Success State with Data -->
     <div 
-      v-else-if="status === 'success' && teams.length > 0" 
+      v-else-if="teams.length > 0" 
       class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
     >
       <DashboardTeamCards
@@ -89,7 +100,7 @@
     </div>
 
     <!-- Success State but Empty Data -->
-    <UiCard v-else-if="status === 'success' && teams.length === 0" class="p-8 text-center">
+    <UiCard v-else-if="teams.length === 0" class="p-8 text-center">
       <div class="space-y-4">
         <div class="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
           <svg 
@@ -115,28 +126,6 @@
       </div>
     </UiCard>
 
-    <!-- Idle State (initial state, rarely used) -->
-    <UiCard v-else-if="status === 'idle'" class="p-6 text-center">
-      <div class="space-y-4">
-        <div class="mx-auto w-16 h-16 bg-muted/30 rounded-full flex items-center justify-center">
-          <svg 
-            class="w-8 h-8 text-muted-foreground animate-pulse" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2" 
-              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"
-            />
-          </svg>
-        </div>
-        <p class="text-muted-foreground">Memuat Data Tim...</p>
-      </div>
-    </UiCard>
-
     <!-- Fallback for unknown status -->
     <UiCard v-else class="p-6 text-center">
       <div class="space-y-4">
@@ -157,7 +146,7 @@
         </div>
         <div class="space-y-2">
           <p class="text-muted-foreground font-medium">Status Tidak Diketahui</p>
-          <p class="text-sm text-muted-foreground">Status: {{ status }}</p>
+          <p class="text-sm text-muted-foreground">Pendingnya mungkin bisa di remove karena tidak diperlukan lagi</p>
         </div>
       </div>
     </UiCard>
@@ -165,13 +154,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { AsyncDataRequestStatus } from '#app';
-import type { Team } from './team.constant';
+import type { Team } from '~/server/db/schema';
 
 defineProps<{
   teams: Team[] | [];
-  status: AsyncDataRequestStatus;
   error: Error | null;
+  pending: boolean;
 }>()
 
 defineEmits<{

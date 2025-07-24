@@ -4,13 +4,25 @@
     description="Halaman ini digunakan untuk menambah dan mengurangi profil pegawai perusahaan untuk ditampilkan di halaman depan" />
     <DashboardTeamFilter :filters="filters" @reset-filters="resetFilters" @openDialog="openDialog" />
     <UiBadge rounded="pill">{{ totalTeam }}</UiBadge>
-    <DashboardTeamGrid :teams="filteredTeams" :status="status" :error="error" @refresh="handleRefresh" @openDialog="openDialog" />
-    <DashboardTeamDialog :isOpen="dialogState.open" :team="dialogState.team" @refresh="handleRefresh" @close="closeDialog" v-model:open="dialogState.open" />
+    <DashboardTeamGrid 
+      :teams="filteredTeams" 
+      :error="error" 
+      :pending="pending"
+      @refresh="handleRefresh" 
+      @openDialog="openDialog" 
+    />
+    <DashboardTeamDialog 
+      :isOpen="dialogState.open" 
+      :team="dialogState.team" 
+      @refresh="handleRefresh" 
+      @close="closeDialog" 
+      v-model:open="dialogState.open" 
+    />
 </template>
 
 <script lang="ts" setup>
-import { debouncedWatch } from '@vueuse/core';
-import type { Team, TeamFilters } from '~/components/dashboard/team/team.constant';
+import type { TeamFilters } from '~/components/dashboard/team/team.constant';
+import type { Team } from '~/server/db/schema';
 
 useHead({
   title: "Tim - Dashboard",
@@ -26,17 +38,14 @@ const {
   data: fetchData,
   error,
   refresh,
-  status,
-} = await useAsyncData('teams', () => $fetch('/api/team'));
+  pending
+} = await useLazyAsyncData('teams', () => $fetch('/api/team'));
 
 const handleRefresh = async () => {
-  await refresh(); // ini refresh useAsyncData
-  teams.value = fetchData.value?.teamMembers || [];
-  applyFilters();
+  await refresh();
 };
 
 const teams = ref<Team[]>([]);
-const filteredTeams = ref<Team[]>([]);
 
 watch(fetchData, (val) => {
   teams.value = val?.teamMembers || [];
@@ -45,8 +54,8 @@ watch(fetchData, (val) => {
 const dialogState = ref({
   open: false,
   team: null as Team | null,
-  test: ""
 });
+
 const filters = ref<TeamFilters>({
   search: "",
   role: [],
@@ -59,16 +68,14 @@ const resetFilters = () => {
     role: [],
     status: null,
   };
-  applyFilters();
 };
 
-// filter logic
-const applyFilters = () => {
+const filteredTeams = computed(() => {
   const search = filters.value.search.toLowerCase();
   const role = filters.value.role;
   const status = filters.value.status;
 
-  filteredTeams.value = teams.value.filter(team => {
+  return teams.value.filter(team => {
     const matchesSearch =
       team.name.toLowerCase().includes(search) ||
       team.position.toLowerCase().includes(search) ||
@@ -81,8 +88,7 @@ const applyFilters = () => {
 
     return matchesSearch && matchesRole && matchesStatus;
   });
-};
-
+});
 
 const openDialog = (team?: Team) => {
   dialogState.value.open = true;
@@ -93,20 +99,6 @@ const closeDialog = () => {
   dialogState.value.open = false;
   dialogState.value.team = null;
 };
-
-// Debounced watch on filter change
-debouncedWatch(
-  filters,
-  () => {
-    applyFilters();
-  },
-  { debounce: 300, deep: true }
-);
-
-// Initial filter application
-onMounted(() => {
-  applyFilters();
-});
 
 const totalTeam = computed(() => teams.value.length > 0 ? `Anda Memiliki ${teams.value.length} Anggota Tim` : `Anda Tidak Memiliki Anggota Tim`)
 </script>

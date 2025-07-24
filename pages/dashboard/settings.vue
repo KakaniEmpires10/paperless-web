@@ -7,4 +7,14 @@
   <DashboardSettingForm />
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+useHead({
+  title: "Setting - Dashboard",
+  meta: [
+    {
+      name: "description",
+      content: "Halaman ini digunakan untuk mengelola Detail tampilan dan Data yang ditampilkan oleh web ini.",
+    },
+  ],
+});
+</script>

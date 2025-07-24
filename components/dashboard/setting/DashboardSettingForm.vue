@@ -155,7 +155,9 @@
               v-else
               aria-hidden="true"
               class="flex items-center justify-center">
-              <Icon name="material-symbols:add-photo-alternate-outline" class="opacity-60" />
+              <Icon
+                name="material-symbols:add-photo-alternate-outline"
+                class="opacity-60" />
             </div>
           </div>
           <div class="relative inline-block">
@@ -251,19 +253,26 @@
           </UiFormDescription>
         </div>
         <div class="md:col-span-2">
-          <FieldArray v-slot="{ fields, push }" name="vision">
+          <FieldArray v-slot="{ fields, push, remove }" name="vision">
             <div v-for="(field, index) in fields" :key="`vision-${field.key}`">
               <UiFormField
                 v-slot="{ componentField }"
                 :name="`vision[${index}].value`"
                 :validate-on-blur="!form.isFieldDirty">
                 <UiFormItem class="mb-3">
-                  <div class="relative flex items-center">
+                  <div class="relative flex gap-2 items-center">
                     <UiFormControl>
                       <UiInput
                         :id="`vision-input-${index}`"
                         v-bind="componentField" />
                     </UiFormControl>
+                    <UiButton
+                      v-if="index !== 0"
+                      size="sm"
+                      variant="destructive"
+                      @click="remove(index)">
+                      <Icon name="material-symbols:delete" />
+                    </UiButton>
                   </div>
                   <UiFormMessage />
                 </UiFormItem>
@@ -293,19 +302,26 @@
           </UiFormDescription>
         </div>
         <div class="md:col-span-2">
-          <FieldArray v-slot="{ fields, push }" name="mission">
+          <FieldArray v-slot="{ fields, push, remove }" name="mission">
             <div v-for="(field, index) in fields" :key="`mission-${field.key}`">
               <UiFormField
                 v-slot="{ componentField }"
                 :name="`mission[${index}].value`"
                 :validate-on-blur="!form.isFieldDirty">
                 <UiFormItem class="mb-3">
-                  <div class="relative flex items-center">
+                  <div class="relative flex gap-2 items-center">
                     <UiFormControl>
                       <UiInput
                         :id="`mission-input-${index}`"
                         v-bind="componentField" />
                     </UiFormControl>
+                    <UiButton
+                      v-if="index !== 0"
+                      size="sm"
+                      variant="destructive"
+                      @click="remove(index)">
+                      <Icon name="material-symbols:delete" />
+                    </UiButton>
                   </div>
                   <UiFormMessage />
                 </UiFormItem>
@@ -476,20 +492,22 @@
       name="youtube"
       :validate-on-blur="!form.isFieldDirty">
       <UiFormItem class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-      <div class="space-y-2">
-        <UiFormLabel>
-        <Icon name="openmoji:youtube" class="text-lg" />Youtube
-        </UiFormLabel>
-        <UiFormDescription> URL channel Youtube perusahaan </UiFormDescription>
-      </div>
-      <div class="md:col-span-2">
-        <UiFormControl>
-        <UiInput
-          v-bind="componentField"
-          placeholder="https://youtube.com/..." />
-        </UiFormControl>
-        <UiFormMessage />
-      </div>
+        <div class="space-y-2">
+          <UiFormLabel>
+            <Icon name="openmoji:youtube" class="text-lg" />Youtube
+          </UiFormLabel>
+          <UiFormDescription>
+            URL channel Youtube perusahaan
+          </UiFormDescription>
+        </div>
+        <div class="md:col-span-2">
+          <UiFormControl>
+            <UiInput
+              v-bind="componentField"
+              placeholder="https://youtube.com/..." />
+          </UiFormControl>
+          <UiFormMessage />
+        </div>
       </UiFormItem>
     </UiFormField>
 
@@ -560,6 +578,8 @@ const onSubmit = form.handleSubmit(async values => {
     logo: file ? file.value : null,
   };
 
+  console.log(dataToSubmit);
+
   try {
     const res = await $fetch("/api/settings", {
       method: "PUT",
@@ -577,6 +597,5 @@ const onSubmit = form.handleSubmit(async values => {
       description: "Terjadi kesalahan saat menyimpan pengaturan perusahaan.",
     });
   }
-
 });
 </script>

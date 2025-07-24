@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useObjectUrl } from "@vueuse/core";
 import { LucideImagePlus } from "lucide-vue-next";
-import { getInitialValues, roleOptions, teamSchema, type Team } from "./team.constant";
+import { getInitialValues, roleOptions, teamSchema } from "./team.constant";
 import { toast } from "vue-sonner";
+import type { Team } from "~/server/db/schema";
 
 const props = defineProps<{
   isOpen: boolean;

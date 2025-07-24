@@ -85,8 +85,8 @@
 
 <script setup lang="ts">
 import { PencilLine, Trash2 } from "lucide-vue-next";
-import type { Team } from "./team.constant";
 import { toast } from "vue-sonner";
+import type { Team } from "~/server/db/schema";
 
 const props = defineProps<{ team: Team }>();
 const emit = defineEmits<{
