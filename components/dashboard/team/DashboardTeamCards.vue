@@ -13,7 +13,7 @@
         <div
           class="border-background bg-muted relative flex size-20 items-center justify-center overflow-hidden rounded-full border-4 shadow-xs shadow-black/10">
           <NuxtImg
-            src="/placeholder_profile.png"
+            :src="team.photo || '/placeholder_profile.png'"
             class="h-full w-full object-cover"
             width="80"
             height="80"

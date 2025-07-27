@@ -21,11 +21,9 @@ export const users = mysqlTable("users", {
     .primaryKey()
     .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   role: varchar("role", { length: 100 }).notNull(),
-  avatar: varchar("avatar", { length: 255 }),
-  phone: varchar("phone", { length: 20 }),
   isActive: boolean("is_active").notNull().default(true),
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -66,17 +64,37 @@ export const team = mysqlTable("team", {
   id: varchar({ length: 128 })
     .primaryKey()
     .$defaultFn(() => createId()),
+  userId: varchar("user_id", { length: 128 }),
   name: varchar("name", { length: 255 }).notNull(),
   position: varchar("position", { length: 255 }).notNull(),
   photo: varchar("photo", { length: 255 }),
   bio: text("bio"),
-  email: varchar("email", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
   phone: varchar("phone", { length: 20 }),
   linkedin: varchar("linkedin", { length: 255 }),
   instagram: varchar("instagram", { length: 255 }),
   twitter: varchar("twitter", { length: 255 }),
   // sortOrder: int("sort_order").notNull().default(0),
   isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+});
+
+// ==============================
+// Contact Messages
+// ==============================
+
+export const contactMessages = mysqlTable("contact_messages", {
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  position: varchar("position", { length: 128 }).notNull(),
+  hospitalName: varchar("hospital_name", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  isRead: boolean("is_read").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });
@@ -175,10 +193,12 @@ export const clients = mysqlTable("clients", {
   id: varchar("id", { length: 128 })
     .primaryKey()
     .$defaultFn(() => createId()),
+  userId: varchar("user_id", { length: 128 }),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }),
+  email: varchar("email", { length: 255 }).unique(),
   phone: varchar("phone", { length: 20 }),
   address: text("address"),
+  joinedAt: timestamp("joined_at"),
   pricingPlanId: varchar("pricing_plan_id", { length: 128 }).notNull(),
 
   isActive: boolean("is_active").notNull().default(true),
@@ -222,6 +242,40 @@ export const suggestions = mysqlTable("suggestions", {
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });
 
+// === users Relations ===
+export const usersRelations = relations(users, ({ one, many }) => ({
+  blogPosts: many(blogPosts),
+  suggestions: many(suggestions),
+  teamMember: one(team, {
+    fields: [users.id],
+    references: [team.userId],
+  }),
+  clientProfile: one(clients, {
+    fields: [users.id],
+    references: [clients.userId],
+  }),
+}));
+
+// === team Relations ===
+export const teamRelations = relations(team, ({ one }) => ({
+  user: one(users, {
+    fields: [team.userId],
+    references: [users.id],
+  }),
+}));
+
+// === clients Relations ===
+export const clientsRelations = relations(clients, ({ one }) => ({
+  pricingPlan: one(pricingPlans, {
+    fields: [clients.pricingPlanId],
+    references: [pricingPlans.id],
+  }),
+  user: one(users, {
+    fields: [clients.userId],
+    references: [users.id],
+  }),
+}));
+
 // === blogPosts Relations ===
 export const blogPostsRelations = relations(blogPosts, ({ one, many }) => ({
   author: one(users, {
@@ -256,20 +310,20 @@ export const blogPostCategoriesRelations = relations(
 );
 
 // === blogComments Relations ===
-export const blogCommentsRelations = relations(
-  blogComments,
-  ({ one, many }) => ({
-    post: one(blogPosts, {
-      fields: [blogComments.postId],
-      references: [blogPosts.id],
-    }),
-    parent: one(blogComments, {
-      fields: [blogComments.parentId],
-      references: [blogComments.id],
-    }),
-    replies: many(blogComments),
-  })
-);
+export const blogCommentsRelations = relations(blogComments, ({ one, many }) => ({
+  post: one(blogPosts, {
+    fields: [blogComments.postId],
+    references: [blogPosts.id],
+  }),
+  parent: one(blogComments, {
+    fields: [blogComments.parentId],
+    references: [blogComments.id],
+    relationName: "CommentReplies",
+  }),
+  replies: many(blogComments, {
+    relationName: "CommentReplies",
+  }),
+}));
 
 // === pricing Relations ===
 export const pricingPlansRelations = relations(pricingPlans, ({ many }) => ({
@@ -282,20 +336,6 @@ export const suggestionsRelations = relations(suggestions, ({ one }) => ({
     fields: [suggestions.userId],
     references: [users.id],
   }),
-}));
-
-// === clients Relations ===
-export const clientsRelations = relations(clients, ({ one }) => ({
-  pricingPlan: one(pricingPlans, {
-    fields: [clients.pricingPlanId],
-    references: [pricingPlans.id],
-  }),
-}));
-
-// === user Relations ===
-export const usersRelations = relations(users, ({ many }) => ({
-  blogPosts: many(blogPosts),
-  suggestions: many(suggestions),
 }));
 
 type SerializedDate<T> = Omit<T, "createdAt" | "updatedAt"> & {
@@ -315,6 +355,7 @@ export type Feature = SerializedDate<InferSelectModel<typeof features>>;
 export type PricingPlan = SerializedDate<InferSelectModel<typeof pricingPlans>>;
 export type Suggestion = SerializedDate<InferSelectModel<typeof suggestions>>;
 export type Client = SerializedDate<InferSelectModel<typeof clients>>;
+export type ContactMessages= SerializedDate<InferSelectModel<typeof contactMessages>>;
 
 // Insert types (when inserting into the DB)
 export type NewUser = InferInsertModel<typeof users>;
@@ -328,3 +369,4 @@ export type NewFeature = InferInsertModel<typeof features>;
 export type NewPricingPlan = InferInsertModel<typeof pricingPlans>;
 export type NewSuggestion = InferInsertModel<typeof suggestions>;
 export type NewClient = InferInsertModel<typeof clients>;
+export type NewContactMessages = InferInsertModel<typeof contactMessages>;

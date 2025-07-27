@@ -21,6 +21,7 @@ export const roleOptions = [
 export function getInitialValues(team: Team | null) {
   return {
     name: team?.name ?? "",
+    photo: team?.photo ?? "",
     position: team?.position ?? "",
     email: team?.email ?? "",
     phone: team?.phone ?? "",
@@ -52,6 +53,7 @@ export const teamSchema = toTypedSchema(
       .email({ message: "Email tidak valid" })
       .optional()
       .or(z.literal("")),
+    photo: z.any(),
     phone: z
       .string()
       .max(20, { message: "Nomor telepon maksimal 20 karakter" })

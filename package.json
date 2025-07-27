@@ -7,7 +7,11 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+
+    "db:push" : "drizzle-kit push",
+    "db:migrate" : "drizzle-kit migrate",
+    "db:studio" : "drizzle-kit studio"
   },
   "dependencies": {
     "@nuxt/content": "^3.6.1",
@@ -30,7 +34,7 @@
     "motion-v": "^1.4.0",
     "mysql2": "^3.14.2",
     "nuxt": "^3.17.5",
-    "reka-ui": "^2.3.2",
+    "reka-ui": "^2.4.0",
     "shadcn-nuxt": "^2.2.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
@@ -59,6 +63,7 @@
     "@iconify-json/mdi": "^1.2.3",
     "@iconify-json/openmoji": "^1.2.9",
     "@iconify-json/skill-icons": "^1.2.0",
+    "@iconify-json/svg-spinners": "^1.2.2",
     "@pinia/nuxt": "^0.11.1",
     "drizzle-kit": "^0.31.4",
     "nuxt-auth-utils": "^0.5.20"

@@ -1,7 +1,6 @@
 import type { ColumnDef } from "@tanstack/vue-table";
 import { Checkbox } from "~/components/ui/checkbox";
 import type { Client } from "./client.constant";
-import Badge from "~/components/ui/badge/Badge.vue";
 import DashboardClientAction from "./DashboardClientAction.vue";
 
 export const columns: ColumnDef<Client>[] = [

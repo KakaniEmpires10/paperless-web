@@ -7,7 +7,7 @@
             ><PencilLine class="size-3"
           /></UiButton>
         </UiTooltipTrigger>
-        <UiTooltipContent class="dark px-2 py-1 text-xs" :show-arrow="true">
+        <UiTooltipContent class="px-2 text-xs" :show-arrow="true">
           Edit
         </UiTooltipContent>
       </UiTooltip>
@@ -17,7 +17,7 @@
             ><Trash2 class="size-3"
           /></UiButton>
         </UiTooltipTrigger>
-        <UiTooltipContent class="dark px-2 py-1 text-xs" :show-arrow="true">
+        <UiTooltipContent class="px-2 text-xs" :show-arrow="true">
           Hapus
         </UiTooltipContent>
       </UiTooltip>
@@ -39,7 +39,7 @@ const storeDelete = useDeleteDialogStore();
 const tableEvents = inject<{
   refresh: () => void;
   openDialog: (client?: Client) => void;
-}>('tableEvents');
+}>('tableClientEvents');
 
 const handleEdit = () => {
   tableEvents?.openDialog(props.row.original);

@@ -11,6 +11,8 @@ export default defineNuxtRouteMiddleware(to => {
     return;
   }
 
+  const allowedDashboard = ["admin", "superadmin"]
+
   // 2. Authentication check
   const { loggedIn, user } = useUserSession();
   if (!loggedIn.value) {
@@ -18,7 +20,10 @@ export default defineNuxtRouteMiddleware(to => {
   }
 
   // 3. Role-based authorization
-  if (to.path.startsWith("/dashboard") && user.value?.role !== "admin") {
+  if (
+    to.path.startsWith("/dashboard") &&
+    !allowedDashboard.includes(user.value?.role ?? "")
+  ) {
     return navigateTo("/unauthorized");
   }
 

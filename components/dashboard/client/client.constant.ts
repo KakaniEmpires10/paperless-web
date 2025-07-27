@@ -2,7 +2,8 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
 import type { Client as ClientSchema, PricingPlan } from "~/server/db/schema";
 
-export type Client = ClientSchema & {
+export type Client = Omit<ClientSchema, "joinedAt"> & {
+  joinedAt: string | null,
   pricing: Pick<PricingPlan, "name">;
 };
 

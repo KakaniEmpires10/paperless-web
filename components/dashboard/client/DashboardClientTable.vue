@@ -117,7 +117,7 @@ const table = useVueTable({
 const totalClient = computed(() => props.data.length > 0 ? `Saat ini kita memiliki ${props.data.length} klien` : `Anda tidak memiliki klien`)
 
 // Provide event handlers to child components through provide/inject
-provide('tableEvents', {
+provide('tableClientEvents', {
   refresh: () => emit('refresh'),
   openDialog: (client?: Client) => emit('openDialog', client)
 });

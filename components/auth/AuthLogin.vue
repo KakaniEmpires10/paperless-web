@@ -10,10 +10,13 @@ const props = defineProps<{
   class?: HTMLAttributes["class"];
 }>();
 
+const route = useRoute()
+
 const isLoading = ref(false);
 const email = ref("");
 const password = ref("");
 const alertShow = ref(false)
+const errMessage = ref("")
 
 const loginSchema = z.object({
   email: z
@@ -25,6 +28,11 @@ const loginSchema = z.object({
     .min(1, { message: "Password Wajib Diisi" })
     .min(8, { message: "Password Tidak Boleh Kurang dari 8 Karakter" }),
 });
+
+const redirectPath = typeof route.query.redirect === "string" &&
+  route.query.redirect.startsWith("/")
+  ? route.query.redirect
+  : "/dashboard";
 
 type loginFormType = z.infer<typeof loginSchema>;
 
@@ -41,15 +49,15 @@ async function onSubmit() {
   } else {
     isLoading.value = true;
 
-    $fetch("/api/login", {
+    $fetch("/api/auth/login", {
       method: "POST",
       body: { email: email.value, password: password.value },
     })
       .then(async () => {
         await refreshSession();
-        await navigateTo("/dashboard");
+        await navigateTo(redirectPath);
       })
-      .catch(() => { errors.value = null, alertShow.value = true })
+      .catch((err) => { errMessage.value = extractErrorMessage(err), alertShow.value = true })
       .finally(() => {
         isLoading.value = false;
       });
@@ -140,7 +148,7 @@ const loadingVariants = {
               <AlertCircle />
               <UiAlertTitle>Error</UiAlertTitle>
               <UiAlertDescription>
-                Email atau Password Anda Tidak Sesuai
+                {{ errMessage }}
               </UiAlertDescription>
             </UiAlert>
 

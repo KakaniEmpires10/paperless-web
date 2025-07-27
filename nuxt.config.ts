@@ -14,11 +14,11 @@ export default defineNuxtConfig({
 
   nitro: {
     storage: {
-      upload: {
+      uploads: {
         driver: "fs",
-        base: "./public",
+        base: "./public/uploads",
       }
-    }
+    },
   },
 
   modules: [
@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: ["stores"]
+    dirs: ["stores"],
   },
 
   css: ["~/assets/css/tailwind.css"],

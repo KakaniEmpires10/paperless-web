@@ -8,7 +8,7 @@ import type { Team } from "~/server/db/schema";
 const props = defineProps<{
   isOpen: boolean;
   team: Team | null;
-  test?: string
+  test?: string;
 }>();
 
 const emit = defineEmits<{
@@ -37,10 +37,12 @@ const cardBtn = computed(() => {
 
 const initialValues = computed(() => getInitialValues(props.team));
 
-const bioText = computed(() => (initialValues.value.bio));
+const bioText = computed(() => initialValues.value.bio);
 const maxLength = 250;
 
 const charactersRemaining = computed(() => maxLength - bioText.value.length);
+
+const loading = ref(false);
 
 // Cover upload functionality
 // const coverInputRef = useTemplateRef("coverInputRef");
@@ -76,21 +78,55 @@ const handleAvatarThumbnailClick = () => {
 };
 
 const onSubmit = async (values: any) => {
+  loading.value = true;
+
   let res;
-  
+  let avatarUrl;
+
+  if (avatarFile) {
+    const fd = new FormData();
+
+    if (initialValues.value.photo) {
+      fd.append("file", avatarFile.value as File);
+      fd.append("oldImagePath", initialValues.value.photo);
+
+      const res = await $fetch("/api/images/replace?dir=profile", {
+        method: "PUT",
+        body: fd,
+      });
+
+      if (res.success) {
+        avatarUrl = res.data.filePath;
+      }
+    } else {
+      fd.append("file", avatarFile.value as File);
+
+      const res = await $fetch("/api/images/upload?dir=profile", {
+        method: "POST",
+        body: fd,
+      });
+
+      if (res.success) {
+        avatarUrl = res.data.filePath;
+      }
+    }
+  }
+
   try {
     if (!!props.team) {
       res = await $fetch(`/api/team/${props.team.id}`, {
         method: "PUT",
         body: {
-          ...values
-        }
-      })
+          ...values,
+          photo: avatarUrl,
+        },
+      });
     } else {
       res = await $fetch("/api/team", {
         method: "POST",
         body: {
           ...values,
+          photo: avatarUrl,
         },
       });
     }
@@ -106,6 +142,8 @@ const onSubmit = async (values: any) => {
         ? error.message
         : "Terjadi kesalahan saat menyimpan tim"
     );
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -188,7 +226,11 @@ const onSubmit = async (values: any) => {
               class="border-background bg-muted relative flex size-20 items-center justify-center overflow-hidden rounded-full border-4 shadow-xs shadow-black/10">
               <NuxtImg
                 v-if="avatarPreviewUrl || '/placeholder_profile.png'"
-                :src="avatarPreviewUrl || '/placeholder_profile.png'"
+                :src="
+                  avatarPreviewUrl ||
+                  initialValues.photo ||
+                  '/placeholder_profile.png'
+                "
                 class="h-full w-full object-cover"
                 width="80"
                 height="80"
@@ -216,10 +258,7 @@ const onSubmit = async (values: any) => {
               id="dialogTeamForm"
               @submit="handleSubmit($event, onSubmit)">
               <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <UiFormField
-                  v-slot="{ componentField }"
-                  name="name"
-                  >
+                <UiFormField v-slot="{ componentField }" name="name">
                   <UiFormItem>
                     <UiFormLabel>Nama</UiFormLabel>
                     <UiFormControl>
@@ -231,10 +270,7 @@ const onSubmit = async (values: any) => {
                   </UiFormItem>
                 </UiFormField>
 
-                <UiFormField
-                  v-slot="{ componentField }"
-                  name="position"
-                  >
+                <UiFormField v-slot="{ componentField }" name="position">
                   <UiFormItem>
                     <UiFormLabel>Posisi</UiFormLabel>
                     <UiSelect v-bind="componentField">
@@ -260,10 +296,7 @@ const onSubmit = async (values: any) => {
               </div>
 
               <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <UiFormField
-                  v-slot="{ componentField }"
-                  name="email"
-                  >
+                <UiFormField v-slot="{ componentField }" name="email">
                   <UiFormItem>
                     <UiFormLabel>Email</UiFormLabel>
                     <UiFormControl>
@@ -276,10 +309,7 @@ const onSubmit = async (values: any) => {
                   </UiFormItem>
                 </UiFormField>
 
-                <UiFormField
-                  v-slot="{ componentField }"
-                  name="phone"
-                  >
+                <UiFormField v-slot="{ componentField }" name="phone">
                   <UiFormItem>
                     <UiFormLabel>Nomor Telepon</UiFormLabel>
                     <UiFormControl>
@@ -293,10 +323,7 @@ const onSubmit = async (values: any) => {
                 </UiFormField>
               </div>
 
-              <UiFormField
-                v-slot="{ componentField }"
-                name="bio"
-                >
+              <UiFormField v-slot="{ componentField }" name="bio">
                 <UiFormItem>
                   <UiFormLabel>Biografi</UiFormLabel>
                   <UiFormControl>
@@ -315,10 +342,7 @@ const onSubmit = async (values: any) => {
                 </UiFormItem>
               </UiFormField>
 
-              <UiFormField
-                v-slot="{ componentField }"
-                name="linkedin"
-                >
+              <UiFormField v-slot="{ componentField }" name="linkedin">
                 <UiFormItem>
                   <UiFormLabel
                     ><Icon name="skill-icons:linkedin" /> LinkedIn</UiFormLabel
@@ -333,10 +357,7 @@ const onSubmit = async (values: any) => {
                 </UiFormItem>
               </UiFormField>
 
-              <UiFormField
-                v-slot="{ componentField }"
-                name="instagram"
-                >
+              <UiFormField v-slot="{ componentField }" name="instagram">
                 <UiFormItem>
                   <UiFormLabel
                     ><Icon name="skill-icons:instagram" />
@@ -352,10 +373,7 @@ const onSubmit = async (values: any) => {
                 </UiFormItem>
               </UiFormField>
 
-              <UiFormField
-                v-slot="{ componentField }"
-                name="twitter"
-                >
+              <UiFormField v-slot="{ componentField }" name="twitter">
                 <UiFormItem>
                   <UiFormLabel
                     ><Icon name="fa6-brands:x-twitter" /> Twitter</UiFormLabel
@@ -373,8 +391,7 @@ const onSubmit = async (values: any) => {
               <UiFormField
                 v-slot="{ handleChange, value }"
                 type="checkbox"
-                name="isActive"
-                >
+                name="isActive">
                 <UiFormItem
                   class="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div class="space-y-0.5">
@@ -397,9 +414,15 @@ const onSubmit = async (values: any) => {
           <UiDialogClose asChild>
             <UiButton type="button" variant="outline">Cancel</UiButton>
           </UiDialogClose>
-          <UiButton type="submit" form="dialogTeamForm"
-            ><Icon :name="cardBtn.icon" class="text-lg" />
-            {{ cardBtn.saveBtnText }}</UiButton
+          <UiButton
+            :disabled="loading"
+            :aria-disabled="loading"
+            type="submit"
+            form="dialogTeamForm"
+            ><Icon
+              :name="loading ? 'svg-spinners:3-dots-bounce' : cardBtn.icon"
+              class="text-lg" />
+            {{ loading ? "menyimpan..." : cardBtn.saveBtnText }}</UiButton
           >
         </UiDialogFooter>
       </UiDialogContent>

@@ -27,6 +27,7 @@ export default defineEventHandler(async event => {
       .set({
         name: body.name,
         bio: body.bio,
+        photo: body.photo ?? undefined,
         position: body.position,
         email: body.email,
         phone: body.phone,

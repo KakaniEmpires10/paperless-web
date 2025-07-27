@@ -6,9 +6,11 @@ export default defineEventHandler(async event => {
     const res = await db
       .select({
         id: clients.id,
+        userId: clients.userId,
         name: clients.name,
         email: clients.email,
         phone: clients.phone,
+        joinedAt: clients.joinedAt,
         address: clients.address,
         pricingPlanId: clients.pricingPlanId,
         isActive: clients.isActive,

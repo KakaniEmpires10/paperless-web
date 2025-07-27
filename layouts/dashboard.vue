@@ -9,23 +9,7 @@
           <UiSeparator
             orientation="vertical"
             class="mr-2 data-[orientation=vertical]:h-4" />
-          <UiBreadcrumb>
-            <UiBreadcrumbList>
-              <UiBreadcrumbItem class="hidden md:block">
-                <UiBreadcrumbLink as-child>
-                  <NuxtLink class="flex justify-center items-center" to="/">
-                    <Icon
-                      name="material-symbols:house-outline-rounded"
-                      class="text-base" />
-                  </NuxtLink>
-                </UiBreadcrumbLink>
-              </UiBreadcrumbItem>
-              <UiBreadcrumbSeparator class="hidden md:block" />
-              <UiBreadcrumbItem>
-                <UiBreadcrumbPage>Dashboard</UiBreadcrumbPage>
-              </UiBreadcrumbItem>
-            </UiBreadcrumbList>
-          </UiBreadcrumb>
+          <DynamicBreadcrumb />
         </div>
       </header>
       <main class="flex flex-1 flex-col gap-4 p-8 pt-0">
@@ -37,8 +21,6 @@
 </template>
 
 <script lang="ts">
-import { DeleteDialog } from '#components';
-
 export const description = "A sidebar that collapses to icons.";
 export const iframeHeight = "800px";
 export const containerClass = "w-full h-full";

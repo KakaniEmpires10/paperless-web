@@ -23,7 +23,7 @@
         <UiCard
           v-for="data in dataArr"
           :key="data.type"
-          class="flex items-center bg-primary/20 border-0 hover:shadow-lg transition-all duration-300">
+          class="flex items-center bg-primary/40 border-0 hover:shadow-lg transition-all duration-300">
           <UiCardContent class="p-6 w-full">
             <h3
               class="text-3xl sm:text-4xl md:text-5xl font-semibold text-center mb-5">

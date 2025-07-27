@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
     await db.insert(team).values({
       name: body.name,
       bio: body.bio,
+      photo: body.photo ?? undefined,
       position: body.position,
       email: body.email,
       phone: body.phone,

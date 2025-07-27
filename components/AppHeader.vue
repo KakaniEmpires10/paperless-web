@@ -4,6 +4,10 @@ import { useWindowScroll } from "@vueuse/core";
 // Get current route
 const route = useRoute();
 
+// get setting
+const settingStore = useSettingStore();
+const { setting, loading } = storeToRefs(settingStore);
+
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
   { href: "/", label: "Beranda" },
@@ -184,7 +188,10 @@ const menuContainerVariants = {
             :whileHover="{ scale: 1.1, rotate: 20 }"
             :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
             <NuxtLink to="/">
-              <NuxtImg class="w-10" src="/favicon.png" alt="logo" />
+              <NuxtImg
+                class="w-10"
+                :src="setting?.logo ? setting.logo : '/favicon.png'"
+                alt="logo" />
             </NuxtLink>
           </Motion>
 
@@ -370,7 +377,10 @@ const menuContainerVariants = {
             :whileHover="{ scale: 1.1, rotate: 20 }"
             :transition="{ type: 'spring', stiffness: 400, damping: 17 }">
             <NuxtLink to="/">
-              <NuxtImg class="w-10" src="/favicon.png" alt="logo" />
+              <NuxtImg
+                class="w-10"
+                :src="setting?.logo ? setting.logo : '/favicon.png'"
+                alt="logo" />
             </NuxtLink>
           </Motion>
 

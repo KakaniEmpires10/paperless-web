@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   try {
     const teamMembers = await db.select().from(team).orderBy(desc(team.updatedAt))
 
-    return { teamMembers }
+    return teamMembers
   } catch (error) {
     console.log(error);
     throw createError({

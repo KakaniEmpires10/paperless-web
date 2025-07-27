@@ -1,6 +1,5 @@
 <template>
-  <div
-    class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:shadow-xl hover:shadow-gray-100/50 dark:border-gray-800 dark:bg-gray-950 dark:hover:shadow-gray-900/20">
+  <UiCard class="relative overflow-hidden transition-all duration-300 hover:shadow-xl group border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
     <!-- Featured Badge -->
     <div
       v-if="feature.isFeatured"
@@ -34,8 +33,7 @@
       </div>
     </div>
 
-    <!-- Card Content -->
-    <div class="p-6">
+    <UiCardHeader class="pb-4">
       <!-- Visual Element -->
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-100 transition-transform duration-300 group-hover:scale-110 dark:from-blue-950/50 dark:to-indigo-900/50">
@@ -57,51 +55,52 @@
         </div>
       </div>
 
-      <!-- Category Tag -->
-      <div class="mb-3">
-        <span
-          class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          {{ feature.category }}
-        </span>
+      <div class="space-y-3">
+        <!-- Category Tag -->
+        <div>
+          <span
+            class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            {{ feature.category }}
+          </span>
+        </div>
+
+        <!-- Title & Description -->
+        <div class="space-y-2">
+          <h3
+            class="text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+            {{ feature.title }}
+          </h3>
+          <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            {{ feature.shortDescription || "No description available." }}
+          </p>
+        </div>
       </div>
+    </UiCardHeader>
 
-      <!-- Title -->
-      <h3
-        class="mb-3 text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
-        {{ feature.title }}
-      </h3>
-
-      <!-- Description -->
-      <p class="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-        {{ feature.shortDescription || "No description available." }}
-      </p>
-
+    <UiCardContent class="pt-0 space-y-4">
       <!-- Features List Collapsible Section -->
       <div
         v-if="feature.featuresList && feature.featuresList.length > 0"
-        class="mb-6">
-        <button
-          @click="isExpanded = !isExpanded"
-          class="flex w-full items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-left text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-300 dark:hover:bg-gray-800">
-          <span class="flex items-center gap-2">
-            <Icon name="lucide:list" class="h-4 w-4" />
-            Features ({{ feature.featuresList.length }})
-          </span>
-          <Icon
-            :name="isExpanded ? 'lucide:chevron-up' : 'lucide:chevron-down'"
-            class="h-4 w-4 transition-transform duration-200" />
-        </button>
+        class="space-y-3">
+        <UiCollapsible v-model:open="isExpanded">
+          <UiCollapsibleTrigger as-child>
+            <UiButton
+              variant="ghost"
+              size="sm"
+              class="w-full justify-between rounded-lg bg-gray-50 px-3 py-2 text-left transition-all duration-200 hover:bg-gray-100 dark:bg-gray-800/50 dark:hover:bg-gray-800">
+              <span class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Icon name="lucide:list" class="h-4 w-4" />
+                Features ({{ feature.featuresList.length }})
+              </span>
+              <Icon
+                :name="isExpanded ? 'lucide:chevron-up' : 'lucide:chevron-down'"
+                class="h-4 w-4 transition-transform duration-200" />
+            </UiButton>
+          </UiCollapsibleTrigger>
 
-        <Transition
-          enter-active-class="transition-all duration-300 ease-out"
-          enter-from-class="opacity-0 max-h-0"
-          enter-to-class="opacity-100 max-h-96"
-          leave-active-class="transition-all duration-300 ease-in"
-          leave-from-class="opacity-100 max-h-96"
-          leave-to-class="opacity-0 max-h-0">
-          <div v-if="isExpanded" class="overflow-hidden">
+          <UiCollapsibleContent class="mt-3">
             <div
-              class="mt-3 space-y-2 rounded-lg border border-gray-200 bg-gray-50/50 p-3 dark:border-gray-700 dark:bg-gray-800/30">
+              class="space-y-2 rounded-lg border border-gray-200 bg-gray-50/50 p-3 dark:border-gray-700 dark:bg-gray-800/30">
               <div
                 v-for="(featureItem, index) in feature.featuresList"
                 :key="index"
@@ -115,12 +114,12 @@
                 </div>
               </div>
             </div>
-          </div>
-        </Transition>
+          </UiCollapsibleContent>
+        </UiCollapsible>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
         <UiButton
           variant="outline"
           size="sm"
@@ -138,12 +137,12 @@
           <Icon name="lucide:trash-2" class="h-4 w-4" />
         </UiButton>
       </div>
-    </div>
+    </UiCardContent>
 
-    <!-- Hover Effect Overlay -->
+    <!-- Hover Effect Overlay - Similar to pricing card -->
     <div
-      class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-  </div>
+      class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none"></div>
+  </UiCard>
 </template>
 
 <script lang="ts" setup>

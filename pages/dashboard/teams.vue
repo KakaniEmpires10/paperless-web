@@ -48,7 +48,7 @@ const handleRefresh = async () => {
 const teams = ref<Team[]>([]);
 
 watch(fetchData, (val) => {
-  teams.value = val?.teamMembers || [];
+  teams.value = val || [];
 }, { immediate: true });
 
 const dialogState = ref({

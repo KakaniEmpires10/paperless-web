@@ -28,33 +28,12 @@
               </h1>
 
               <p class="text-xl text-muted-foreground leading-relaxed">
-                Paperless Hospital memimpin revolusi digital dalam dunia
-                kesehatan Indonesia dengan teknologi AI terdepan, menciptakan
-                sistem rumah sakit yang lebih efisien dan mengutamakan kualitas
-                pelayanan pasien.
+                {{
+                  setting?.about
+                    ? setting.about
+                    : "Paperless Hospital memimpin revolusi digital dalam dunia kesehatan Indonesia dengan teknologi AI terdepan, menciptakan sistem rumah sakit yang lebih efisien dan mengutamakan kualitas pelayanan pasien."
+                }}
               </p>
-            </div>
-
-            <!-- Stats Row -->
-            <div class="grid grid-cols-3 gap-6">
-              <Motion
-                v-for="(stat, index) in heroStats"
-                :key="stat.label"
-                :initial="{ opacity: 0, y: 20 }"
-                :animate="{ opacity: 1, y: 0 }"
-                :transition="{
-                  duration: 0.6,
-                  delay: 0.4 + index * 0.1,
-                  ease: 'easeOut',
-                }"
-                class="text-center">
-                <div class="text-2xl md:text-3xl font-bold text-foreground">
-                  {{ stat.number }}
-                </div>
-                <div class="text-sm text-muted-foreground">
-                  {{ stat.label }}
-                </div>
-              </Motion>
             </div>
           </Motion>
 
@@ -118,12 +97,11 @@
                     <div class="text-sm text-primary">Our Mission</div>
                   </div>
                 </div>
-                <p class="text-muted-foreground leading-relaxed">
-                  Mentransformasi sistem dokumentasi medis tradisional menjadi
-                  solusi digital yang cerdas, membantu tenaga medis fokus pada
-                  hal yang paling penting: memberikan pelayanan terbaik kepada
-                  pasien.
-                </p>
+                <ul v-if="setting?.mission.length! > 0">
+                  <ul v-for="item in setting?.mission" class="flex gap-2 items-center">
+                    <Icon name="material-symbols:check-circle-outline-rounded" class="text-green-500" /><span class="text-muted-foreground leading-relaxed">{{ item }}</span>
+                  </ul>
+                </ul>
               </div>
             </div>
           </Motion>
@@ -147,12 +125,11 @@
                     <div class="text-sm text-primary">Our Vision</div>
                   </div>
                 </div>
-                <p class="text-muted-foreground leading-relaxed">
-                  Membangun ekosistem kesehatan digital yang terintegrasi, di
-                  mana setiap rumah sakit di Indonesia dapat memberikan
-                  pelayanan kesehatan yang lebih baik melalui teknologi AI yang
-                  inovatif dan terpercaya.
-                </p>
+                <ul v-if="setting?.vision.length! > 0">
+                  <ul v-for="item in setting?.vision" class="flex gap-2 items-center">
+                    <Icon name="material-symbols:check-circle-outline-rounded" class="text-green-500" /><span class="text-muted-foreground leading-relaxed">{{ item }}</span>
+                  </ul>
+                </ul>
               </div>
             </div>
           </Motion>
@@ -275,36 +252,140 @@
       </div>
     </div>
 
+    <!-- Team Section with Carousel -->
+    <div class="bg-background py-24">
+      <div class="container mx-auto px-4">
+        <Motion
+          :initial="{ opacity: 0, y: 50 }"
+          :animate="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.8, ease: 'easeOut' }"
+          class="text-center mb-16">
+          <UiBadge variant="soft" rounded="pill" size="lg" class="mb-6">
+            <Icon name="mdi:account-group" class="mr-2" /> 
+            Tim Ahli Kami
+          </UiBadge>
+          <h2 class="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            Bertemu dengan 
+            <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Tim Visioner
+            </span>
+          </h2>
+          <p class="text-muted-foreground max-w-4xl mx-auto text-xl leading-relaxed">
+            Tim ahli multidisiplin yang terdiri dari para profesional berpengalaman 
+            dalam bidang teknologi kesehatan, AI, dan transformasi digital.
+          </p>
+        </Motion>
+
+        <!-- Team Carousel -->
+        <Motion
+          :initial="{ opacity: 0, y: 30 }"
+          :animate="{ opacity: 1, y: 0 }"
+          :transition="{ duration: 0.8, delay: 0.3, ease: 'easeOut' }">
+          <UiCarousel class="w-full max-w-6xl mx-auto">
+            <UiCarouselContent>
+              <UiCarouselItem 
+                v-for="member in teamMembers" 
+                :key="member.name"
+                class="md:basis-1/2 lg:basis-1/3">
+                <div class="p-4">
+                  <div class="bg-card border border-border rounded-3xl p-8 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:scale-105 group">
+                    <div class="text-center space-y-6">
+                      <!-- Avatar -->
+                      <div class="relative mx-auto w-32 h-32">
+                        <div class="w-full h-full bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center group-hover:from-primary/30 group-hover:to-accent/30 transition-all">
+                          <Icon :name="member.avatar" class="w-16 h-16 text-primary" />
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                          <Icon name="mdi:check" class="w-4 h-4 text-white" />
+                        </div>
+                      </div>
+                      
+                      <!-- Info -->
+                      <div class="space-y-3">
+                        <h3 class="text-xl font-bold text-foreground">{{ member.name }}</h3>
+                        <p class="text-primary font-medium">{{ member.role }}</p>
+                        <p class="text-muted-foreground text-sm leading-relaxed">{{ member.description }}</p>
+                      </div>
+
+                      <!-- Skills -->
+                      <div class="flex flex-wrap gap-2 justify-center">
+                        <span 
+                          v-for="skill in member.skills" 
+                          :key="skill"
+                          class="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full">
+                          {{ skill }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </UiCarouselItem>
+            </UiCarouselContent>
+            <UiCarouselPrevious class="hidden md:flex" />
+            <UiCarouselNext class="hidden md:flex" />
+          </UiCarousel>
+        </Motion>
+      </div>
+    </div>
+
     <!-- Final CTA Section -->
-    <div class="container mx-auto px-4 py-20">
+    <div class="container mx-auto px-4 py-24">
       <Motion
         :initial="{ opacity: 0, y: 50 }"
         :animate="{ opacity: 1, y: 0 }"
         :transition="{ duration: 0.8, ease: 'easeOut' }"
         class="text-center">
-        <div
-          class="bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl p-8 md:p-12 border border-primary/20">
-          <div class="max-w-3xl mx-auto space-y-8">
-            <div class="space-y-4">
-              <h2 class="text-3xl md:text-4xl font-bold text-foreground">
-                Siap Bertransformasi Menjadi Rumah Sakit Digital?
+        <div class="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 rounded-3xl p-12 md:p-16 border border-primary/20 backdrop-blur-sm relative overflow-hidden">
+          <!-- Background Pattern -->
+          <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-32 h-32 bg-primary rounded-full blur-2xl"></div>
+            <div class="absolute bottom-0 right-0 w-48 h-48 bg-accent rounded-full blur-3xl"></div>
+          </div>
+          
+          <div class="max-w-4xl mx-auto space-y-10 relative z-10">
+            <div class="space-y-6">
+              <UiBadge variant="soft" rounded="pill" size="lg" class="mb-4">
+                <Icon name="mdi:rocket-launch" class="mr-2" /> 
+                Mulai Transformasi
+              </UiBadge>
+              <h2 class="text-4xl md:text-5xl font-bold text-foreground leading-tight">
+                Siap Bertransformasi Menjadi 
+                <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Rumah Sakit Digital?
+                </span>
               </h2>
-              <p class="text-muted-foreground text-lg">
+              <p class="text-muted-foreground text-xl leading-relaxed max-w-3xl mx-auto">
                 Bergabunglah dengan puluhan rumah sakit di Indonesia yang telah
                 merasakan manfaat teknologi AI dalam meningkatkan kualitas
-                pelayanan kesehatan.
+                pelayanan kesehatan dan efisiensi operasional.
               </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                class="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-all duration-300 hover:scale-105">
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <button class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-10 py-4 rounded-2xl font-semibold hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+                <Icon name="mdi:play-circle" class="mr-2 inline" />
                 Dapatkan Demo Gratis
               </button>
-              <button
-                class="border border-border text-foreground px-8 py-3 rounded-lg font-medium hover:bg-accent transition-colors">
+              <button class="border-2 border-border hover:border-primary/50 text-foreground px-10 py-4 rounded-2xl font-semibold hover:bg-accent/50 transition-all duration-300 hover:scale-105">
+                <Icon name="mdi:chat" class="mr-2 inline" />
                 Konsultasi Sekarang
               </button>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="flex flex-wrap justify-center items-center gap-8 pt-8 opacity-60">
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <Icon name="mdi:shield-check" class="text-green-500" />
+                <span>ISO 27001 Certified</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <Icon name="mdi:clock-fast" class="text-blue-500" />
+                <span>24/7 Support</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm text-muted-foreground">
+                <Icon name="mdi:account-group" class="text-purple-500" />
+                <span>14+ Rumah Sakit</span>
+              </div>
             </div>
           </div>
         </div>
@@ -317,8 +398,6 @@
 import {
   Target,
   Eye,
-  Building2,
-  Award,
   Brain,
   FileText,
   Shield,
@@ -326,25 +405,11 @@ import {
   Clock,
   TrendingUp,
   CheckCircle,
-  Lightbulb,
-  Headphones,
-  Globe,
 } from "lucide-vue-next";
 
-const heroStats = [
-  {
-    number: "14+",
-    label: "Rumah Sakit",
-  },
-  {
-    number: "300+",
-    label: "Regulasi",
-  },
-  {
-    number: "99.9%",
-    label: "Uptime",
-  },
-];
+const settingStore = useSettingStore();
+
+const { setting, loading } = storeToRefs(settingStore);
 
 const technologies = [
   {
@@ -367,6 +432,51 @@ const technologies = [
     description: "Dashboard analisis finansial waktu nyata",
     icon: Zap,
   },
+];
+
+const teamMembers = [
+  {
+    name: "Dr. Ahmad Wijaya",
+    role: "Chief Medical Officer",
+    description: "Spesialis dengan 15+ tahun pengalaman dalam digitalisasi sistem kesehatan dan implementasi teknologi AI di rumah sakit.",
+    avatar: "mdi:doctor",
+    skills: ["Medical AI", "Healthcare Innovation", "Digital Transformation"]
+  },
+  {
+    name: "Sarah Chen",
+    role: "Chief Technology Officer", 
+    description: "Expert dalam pengembangan AI dan machine learning dengan fokus khusus pada aplikasi teknologi dalam bidang kesehatan.",
+    avatar: "mdi:account-circle",
+    skills: ["AI Development", "Machine Learning", "Healthcare Tech"]
+  },
+  {
+    name: "Michael Rodriguez",
+    role: "Head of Product Strategy",
+    description: "Berpengalaman dalam merancang solusi digital yang user-friendly untuk transformasi operasional rumah sakit.",
+    avatar: "mdi:account-tie",
+    skills: ["Product Strategy", "UX Design", "Healthcare Operations"]
+  },
+  {
+    name: "Dr. Lisa Tan",
+    role: "Head of Clinical Integration",
+    description: "Dokter spesialis yang memimpin integrasi teknologi AI dengan workflow klinis untuk hasil optimal bagi pasien.",
+    avatar: "mdi:doctor",
+    skills: ["Clinical Workflow", "AI Integration", "Patient Care"]
+  },
+  {
+    name: "David Kim",
+    role: "Lead Data Scientist",
+    description: "Ahli dalam analisis data medis dan pengembangan algoritma AI untuk meningkatkan akurasi diagnosis dan treatment.",
+    avatar: "mdi:account-school",
+    skills: ["Data Science", "Medical Analytics", "AI Algorithms"]
+  },
+  {
+    name: "Jennifer Wong",
+    role: "Head of Customer Success",
+    description: "Memastikan implementasi yang sukses dan memberikan dukungan berkelanjutan kepada mitra rumah sakit kami.",
+    avatar: "mdi:account-heart",
+    skills: ["Customer Success", "Implementation", "Support Management"]
+  }
 ];
 
 const impacts = [
@@ -395,29 +505,4 @@ const impacts = [
     ],
   },
 ];
-
-const reasons = [
-  {
-    title: "Teknologi AI Terdepan",
-    description:
-      "Menggunakan teknologi AI terkini yang telah terbukti meningkatkan efisiensi operasional rumah sakit",
-    icon: Lightbulb,
-  },
-  {
-    title: "Support 24/7",
-    description:
-      "Tim support yang siap membantu Anda kapan saja untuk memastikan sistem berjalan optimal",
-    icon: Headphones,
-  },
-  {
-    title: "Compliance Terjamin",
-    description:
-      "Sistem yang memenuhi 300+ regulasi asuransi Indonesia dan standar keamanan data medis",
-    icon: CheckCircle,
-  },
-];
 </script>
-
-<style scoped>
-/* Additional custom styles if needed */
-</style>

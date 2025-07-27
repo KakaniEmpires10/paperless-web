@@ -4,12 +4,9 @@
     id="home-about">
     <article class="space-y-6 flex-1">
       <h2 class="text-3xl md:text-4xl font-semibold">Siapa Kami ?</h2>
+      <UiSkeleton v-if="loading" class="w-full h-32" />
       <p class="text-base md:text-lg">
-        Kami adalah perusahaan yang memfokuskan diri dalam menghadirkan dan
-        mensupport rumah sakit serta instansi kesehatan lainnya dalam
-        meng-optimalkan pelayanan kepada pasien dengan memberikan software
-        berbasis web dan di lengkapi dengan AI Medical Scribe dan IT support
-        local.
+        {{ setting?.excerpt ? setting.excerpt :  'Kami adalah perusahaan yang memfokuskan diri dalam menghadirkan dan mensupport rumah sakit serta instansi kesehatan lainnya dalam meng-optimalkan pelayanan kepada pasien dengan memberikan software berbasis web dan di lengkapi dengan AI Medical Scribe dan IT support local.'}}
       </p>
       <UiButton as-child
         ><NuxtLink to="/about"
@@ -28,3 +25,9 @@
     </div>
   </section>
 </template>
+
+<script lang="ts" setup>
+const settingStore = useSettingStore()
+
+const { setting, loading } = storeToRefs(settingStore)
+</script>

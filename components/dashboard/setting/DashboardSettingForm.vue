@@ -512,9 +512,8 @@
     </UiFormField>
 
     <div class="flex justify-end pt-6">
-      <UiButton type="submit">
-        <Icon name="flowbite:floppy-disk-solid" class="text-lg" /> Simpan
-        Pengaturan
+      <UiButton :disabled="loading" :aria-disabled="loading" type="submit">
+        <Icon :name="loading ? 'svg-spinners:3-dots-bounce' :'flowbite:floppy-disk-solid'" class="text-lg" /> {{ loading ? 'memperbaharui...' : 'Simpan Pengaturan' }}
       </UiButton>
     </div>
   </form>
@@ -531,6 +530,7 @@ const { data: settingData } = await useFetch("/api/settings");
 const file = shallowRef<File | null>(null);
 const previewUrl = useObjectUrl(file);
 const inputRef = useTemplateRef("fileInput");
+const loading = ref(false)
 
 function handleButtonClick() {
   if (inputRef.value) {
@@ -570,15 +570,40 @@ const form = useForm({
 });
 
 const onSubmit = form.handleSubmit(async values => {
+  loading.value = true
+
+  let logoUrl;
+
+  if (file) {
+    const fd = new FormData()
+    fd.append("file", file.value as File)
+    fd.append("oldImagePath", settingData.value?.logo as string)
+
+    try {
+      const res = await $fetch("/api/images/replace", {
+        method: "PUT",
+        body: fd
+      })
+
+      if (res.success) {
+        logoUrl = res.data.filePath
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error((err as Error).message)
+
+      loading.value = false
+      return
+    }
+  }
+
   const dataToSubmit = {
     ...values,
     vision: values.vision.map(v => v.value),
     mission: values.mission.map(m => m.value),
     keywords: values.keywords.map(k => k.trim().toLowerCase()),
-    logo: file ? file.value : null,
+    logo: file ? logoUrl : null,
   };
-
-  console.log(dataToSubmit);
 
   try {
     const res = await $fetch("/api/settings", {
@@ -596,6 +621,10 @@ const onSubmit = form.handleSubmit(async values => {
     toast.error("Gagal mengupdate pengaturan", {
       description: "Terjadi kesalahan saat menyimpan pengaturan perusahaan.",
     });
+
+    loading.value = false
+  } finally {
+    loading.value = false
   }
 });
 </script>

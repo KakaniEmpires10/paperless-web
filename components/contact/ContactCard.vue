@@ -52,7 +52,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">{{ settingData?.phoneNumber }}</p>
+                    <p class="font-medium">{{ setting?.phoneNumber }}</p>
                   </div>
                 </Motion>
 
@@ -77,7 +77,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">{{ settingData?.email }}</p>
+                    <p class="font-medium">{{ setting?.email }}</p>
                   </div>
                 </Motion>
 
@@ -102,7 +102,7 @@
                     </Motion>
                   </Motion>
                   <div>
-                    <p class="font-medium">{{ settingData?.address }}</p>
+                    <p class="font-medium">{{ setting?.address }}</p>
                   </div>
                 </Motion>
               </div>
@@ -124,7 +124,10 @@
           :animate="{ opacity: 1, x: 0 }"
           :transition="{ duration: 0.8, ease: 'easeOut' }">
           <form class="py-10 px-10 lg:px-16 space-y-6" @submit="onSubmit">
-            <UiFormField v-slot="{ componentField }" name="name" :validate-on-blur="!form.isFieldDirty">
+            <UiFormField
+              v-slot="{ componentField }"
+              name="name"
+              :validate-on-blur="!form.isFieldDirty">
               <Motion
                 :initial="{ opacity: 0, y: 30 }"
                 :animate="{ opacity: 1, y: 0 }"
@@ -147,7 +150,10 @@
             </UiFormField>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-              <UiFormField v-slot="{ componentField }" name="email" :validate-on-blur="!form.isFieldDirty">
+              <UiFormField
+                v-slot="{ componentField }"
+                name="email"
+                :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -169,7 +175,10 @@
                 </Motion>
               </UiFormField>
 
-              <UiFormField v-slot="{ componentField }" name="phone" :validate-on-blur="!form.isFieldDirty">
+              <UiFormField
+                v-slot="{ componentField }"
+                name="phone"
+                :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -193,7 +202,10 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-              <UiFormField v-slot="{ componentField }" name="hospitalName" :validate-on-blur="!form.isFieldDirty">
+              <UiFormField
+                v-slot="{ componentField }"
+                name="hospitalName"
+                :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -215,7 +227,10 @@
                 </Motion>
               </UiFormField>
 
-              <UiFormField v-slot="{ componentField }" name="position" :validate-on-blur="!form.isFieldDirty">
+              <UiFormField
+                v-slot="{ componentField }"
+                name="position"
+                :validate-on-blur="!form.isFieldDirty">
                 <Motion
                   :initial="{ opacity: 0, y: 30 }"
                   :animate="{ opacity: 1, y: 0 }"
@@ -238,7 +253,10 @@
               </UiFormField>
             </div>
 
-            <UiFormField v-slot="{ componentField }" name="message" :validate-on-blur="!form.isFieldDirty">
+            <UiFormField
+              v-slot="{ componentField }"
+              name="message"
+              :validate-on-blur="!form.isFieldDirty">
               <Motion
                 :initial="{ opacity: 0, y: 30 }"
                 :animate="{ opacity: 1, y: 0 }"
@@ -266,11 +284,12 @@
               :whileHover="{ scale: 1.05 }"
               :whileTap="{ scale: 0.95 }">
               <UiButton
+                :disabled="loading"
+                :aria-disabled="loading"
                 class="w-full transition-all duration-300 hover:shadow-lg group">
-                Kirim
-                <Motion :whileHover="{ x: 4 }" :transition="{ duration: 0.3 }">
-                  <Send class="size-3.5" />
-                </Motion>
+                {{ loading ? "Mengirim..." : "Kirim" }}
+                <Loader2 v-if="loading" class="size-3.5 animate-spin" />
+                <Send v-else class="size-3.5" />
               </UiButton>
             </Motion>
           </form>
@@ -278,17 +297,26 @@
       </UiCardContent>
     </UiCard>
   </Motion>
+
+  <!-- Success Dialog Component -->
+  <ContactSuccessDialog
+    :isOpen="showSuccessDialog"
+    v-model:open="showSuccessDialog"
+    @closed="onDialogClosed" />
 </template>
 
 <script lang="ts" setup>
 import { toTypedSchema } from "@vee-validate/zod";
-import { Mail, MapPin, Phone, Send } from "lucide-vue-next";
+import { Loader2, Mail, MapPin, Phone, Send } from "lucide-vue-next";
 import { useForm } from "vee-validate";
+import { toast } from "vue-sonner";
 import { z } from "zod";
 
-const { data: settingData } = await useFetch("/api/settings", {
-  pick: ["email", "address", "phoneNumber"]
-});
+const settingStore = useSettingStore();
+const { setting } = storeToRefs(settingStore);
+
+const loading = ref(false);
+const showSuccessDialog = ref(false);
 
 const contactSchema = toTypedSchema(
   z.object({
@@ -313,7 +341,33 @@ const contactSchema = toTypedSchema(
 
 const form = useForm({ validationSchema: contactSchema });
 
-const onSubmit = form.handleSubmit(values => {
-  console.log("Form submitted!", values);
+const onSubmit = form.handleSubmit(async values => {
+  loading.value = true;
+
+  try {
+    const res = await $fetch("/api/contacts", {
+      method: "POST",
+      body: values,
+    });
+
+    if (res.success) {
+      showSuccessDialog.value = true;
+      form.resetForm();
+    }
+  } catch (error) {
+    toast.error((error as Error).message);
+  } finally {
+    loading.value = false;
+  }
 });
+
+const onDialogClosed = async () => {
+  await navigateTo("/");
+
+  // Optional: Track analytics
+  // gtag('event', 'contact_form_submitted', {
+  //   event_category: 'engagement',
+  //   event_label: 'contact_form'
+  // })
+};
 </script>
