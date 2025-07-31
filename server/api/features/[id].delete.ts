@@ -2,6 +2,8 @@ import { eq } from "drizzle-orm";
 import { features } from "~/server/db/schema";
 
 export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const id = getRouterParam(event, "id");
 
   if (!id) {
@@ -20,7 +22,7 @@ export default defineEventHandler(async event => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
+      statusMessage: "Gagal Menghapus Fitur",
       message:
         error instanceof Error ? error.message : "An unexpected error occurred",
     });

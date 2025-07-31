@@ -35,4 +35,11 @@
   </section>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+useHead({
+  title: "Hubungi Kami",
+  meta: [
+    { name: "description", content: "Hubungi kami untuk informasi lebih lanjut, konsultasi gratis, atau kerja sama dalam digitalisasi layanan rumah sakit Anda" }
+  ]
+})
+</script>

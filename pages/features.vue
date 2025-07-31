@@ -44,22 +44,13 @@
 
 <script lang="ts" setup>
 useHead({
-  title: "Fitur Unggulan Aplikasi Klinik & Rumah Sakit | Paperless",
+  title: "Fitur",
   meta: [
     {
       name: "description",
       content:
         "Temukan berbagai fitur unggulan aplikasi rumah sakit seperti registrasi pasien, bridging BPJS dan JKN online, serta rekam medis elektronik yang mendukung pelayanan kesehatan lebih efisien dan paperless.",
-    },
-    {
-      name: "keywords",
-      content:
-        "fitur aplikasi rumah sakit, bridging BPJS, sistem JKN online, rekam medis elektronik, registrasi pasien, aplikasi klinik digital, software rumah sakit",
-    },
-    {
-      name: "robots",
-      content: "index, follow",
-    },
+    }
   ],
 });
 </script>

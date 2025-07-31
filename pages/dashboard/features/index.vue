@@ -11,7 +11,7 @@
 import type { Feature } from "~/server/db/schema";
 
 useHead({
-  title: "Fitur - Dashboard",
+  title: "Fitur",
   meta: [
     {
       name: "description",
@@ -21,7 +21,7 @@ useHead({
   ],
 });
 
-const { data: fetchData, refresh } = await useAsyncData("fetures", () =>
+const { data: fetchData, refresh } = await useAsyncData("features", () =>
   $fetch("/api/features")
 );
 

@@ -16,7 +16,7 @@ import type { Client } from '~/components/dashboard/client/client.constant';
 import { columns } from '~/components/dashboard/client/column';
 
 useHead({
-  title: "klien - Dashboard",
+  title: "klien",
   meta: [
     {
       name: "description",

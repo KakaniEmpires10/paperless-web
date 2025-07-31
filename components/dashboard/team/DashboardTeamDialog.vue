@@ -83,7 +83,7 @@ const onSubmit = async (values: any) => {
   let res;
   let avatarUrl;
 
-  if (avatarFile) {
+  if (avatarFile.value) {
     const fd = new FormData();
 
     if (initialValues.value.photo) {
@@ -137,11 +137,7 @@ const onSubmit = async (values: any) => {
       emit("close");
     }
   } catch (error) {
-    toast.error(
-      error instanceof Error
-        ? error.message
-        : "Terjadi kesalahan saat menyimpan tim"
-    );
+    toast.error(extractErrorMessage(error));
   } finally {
     loading.value = false;
   }

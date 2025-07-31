@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 useHead({
-  title: "Update Paket - Dashboard",
+  title: "Update Paket",
   meta: [
     {
       name: "description",

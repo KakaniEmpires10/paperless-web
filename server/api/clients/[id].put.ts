@@ -2,6 +2,8 @@ import { eq } from "drizzle-orm";
 import { clients } from "~/server/db/schema";
 
 export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
@@ -39,8 +41,8 @@ export default defineEventHandler(async event => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to update client",
+      statusMessage: "Gagal Mempernaharui Klien",
+      message: (error as Error).message,
       cause: error,
     });
   }

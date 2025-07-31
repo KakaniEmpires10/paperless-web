@@ -2,13 +2,15 @@ import { eq } from "drizzle-orm";
 import { users } from "~/server/db/schema";
 
 export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
   if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Bad Request",
+      statusMessage: "Id ",
       message: "Request Id is required",
     });
   }
@@ -37,8 +39,8 @@ export default defineEventHandler(async event => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to insert users",
+      statusMessage: "Gagal Meng-update User",
+      message: (error as Error).message,
       cause: error,
     });
   }

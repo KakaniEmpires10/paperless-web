@@ -2,6 +2,8 @@ import { eq } from "drizzle-orm";
 import { pricingPlans } from "~/server/db/schema";
 
 export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
@@ -28,10 +30,12 @@ export default defineEventHandler(async event => {
         name: body.name,
         price: body.price,
         type: body.type,
+        excerpt: body.excerpt,
         description: body.description,
         features: body.features,
         isActive: body.isActive,
         isPopular: body.isPopular,
+        order: body.order,
       })
       .where(eq(pricingPlans.id, id));
 
@@ -40,8 +44,8 @@ export default defineEventHandler(async event => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to update pricing plan",
+      statusMessage: "Gagal Memperbaharui Paket",
+      message: (error as Error).message,
       cause: error,
     });
   }

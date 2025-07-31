@@ -12,6 +12,12 @@ export const badgeVariants = cva(
         soft: "border-transparent bg-primary/10 text-primary [a&]:hover:bg-primary/50",
         warning:
           "border-transparent bg-amber-100 text-amber-600 [a&]:hover:bg-amber-200",
+        success:
+          "border-transparent bg-green-100 text-green-600 [a&]:hover:bg-green-200",
+        info:
+          "border-transparent bg-sky-100 text-sky-600 [a&]:hover:bg-sky-200",
+        teal:
+          "border-transparent bg-teal-100 text-teal-600 [a&]:hover:bg-teal-200",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
         destructive:

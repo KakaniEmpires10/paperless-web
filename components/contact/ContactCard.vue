@@ -299,7 +299,7 @@
   </Motion>
 
   <!-- Success Dialog Component -->
-  <ContactSuccessDialog
+  <SuccessDialog
     :isOpen="showSuccessDialog"
     v-model:open="showSuccessDialog"
     @closed="onDialogClosed" />
@@ -355,7 +355,7 @@ const onSubmit = form.handleSubmit(async values => {
       form.resetForm();
     }
   } catch (error) {
-    toast.error((error as Error).message);
+    toast.error(extractErrorMessage(error));
   } finally {
     loading.value = false;
   }

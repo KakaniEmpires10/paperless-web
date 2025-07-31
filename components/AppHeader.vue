@@ -227,7 +227,7 @@ const menuContainerVariants = {
 
       <!-- Right side -->
       <div class="flex items-center gap-2">
-        <AuthState>
+        <!-- <AuthState>
           <template #default="{ loggedIn, clear }">
             <Motion
               v-if="loggedIn"
@@ -257,7 +257,7 @@ const menuContainerVariants = {
           <template #placeholder>
             <UiButton variant="ghost" disabled>Loading...</UiButton>
           </template>
-        </AuthState>
+        </AuthState> -->
         <!-- <Motion
           :whileHover="{ scale: 1.05 }"
           :whileTap="{ scale: 0.95 }"
@@ -416,7 +416,7 @@ const menuContainerVariants = {
 
       <!-- Right side -->
       <div class="flex items-center gap-2">
-        <AuthState>
+        <!-- <AuthState>
           <template #default="{ loggedIn, clear }">
             <Motion
               v-if="loggedIn"
@@ -446,7 +446,7 @@ const menuContainerVariants = {
           <template #placeholder>
             <UiButton variant="ghost" disabled>Loading...</UiButton>
           </template>
-        </AuthState>
+        </AuthState> -->
         <!-- <Motion
           :whileHover="{ scale: 1.05 }"
           :whileTap="{ scale: 0.95 }"

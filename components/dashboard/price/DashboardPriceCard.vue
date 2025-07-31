@@ -39,6 +39,7 @@
           >
             {{ pricing.isActive ? 'Aktif' : 'Nonaktif' }}
           </UiBadge>
+          <UiBadge v-if="pricing.order" rounded="pill" variant="teal">{{ pricing.order }}</UiBadge>
         </div>
 
         <!-- Title & Description -->
@@ -47,7 +48,7 @@
             {{ pricing.name }}
           </h3>
           <p class="text-sm text-gray-600 leading-relaxed">
-            {{ pricing.description }}
+            {{ pricing.excerpt }}
           </p>
         </div>
 

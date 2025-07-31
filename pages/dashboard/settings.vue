@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 useHead({
-  title: "Setting - Dashboard",
+  title: "Setting",
   meta: [
     {
       name: "description",

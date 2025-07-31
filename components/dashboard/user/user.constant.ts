@@ -31,7 +31,7 @@ export const userCreateSchema = toTypedSchema(
       .max(255, "Email maksimal 255 karakter"),
 
     password: z
-      .string()
+      .string({ required_error: "Password Wajib Diisi" })
       .min(1, "Password Wajib Diisi untuk login")
       .min(8, "Password Tidak Boleh Kurang dari 8 Karakter")
       .regex(/^(?=.*[A-Z])(?=.*\d)/, {
@@ -40,8 +40,16 @@ export const userCreateSchema = toTypedSchema(
       }),
 
     role: z.enum(roleOption, {
-      required_error: "Role wajib dipilih",
-      invalid_type_error: "Role tidak valid",
+      errorMap: (issue, _ctx) => {
+          switch (issue.code) {
+            case 'invalid_type':
+              return { message: 'Tipe data tidak valid' };
+            case 'invalid_enum_value':
+              return { message: 'opsi tidak valid' };
+            default:
+              return { message: 'role wajib diisi' };
+          }
+        },
     }),
 
     isActive: z.boolean().default(true),
@@ -61,8 +69,16 @@ export const userUpdateSchema = toTypedSchema(
       .max(255, "Email maksimal 255 karakter"),
 
     role: z.enum(roleOption, {
-      required_error: "Role wajib dipilih",
-      invalid_type_error: "Role tidak valid",
+      errorMap: (issue, _ctx) => {
+          switch (issue.code) {
+            case 'invalid_type':
+              return { message: 'Tipe data tidak valid' };
+            case 'invalid_enum_value':
+              return { message: 'opsi tidak valid' };
+            default:
+              return { message: 'role wajib diisi' };
+          }
+        },
     }),
 
     isActive: z.boolean().default(true),

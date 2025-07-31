@@ -2,6 +2,8 @@ import { eq } from "drizzle-orm";
 import { team } from "../../db/schema";
 
 export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
@@ -43,8 +45,8 @@ export default defineEventHandler(async event => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to insert team member",
+      statusMessage: "Gagal Memperbaharui Anggota Tim",
+      message: (error as Error).message,
       cause: error,
     });
   }

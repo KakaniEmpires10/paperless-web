@@ -1,6 +1,8 @@
 import { features } from "~/server/db/schema";
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const body = await readBody(event);
 
   if (!body) {
@@ -20,17 +22,17 @@ export default defineEventHandler(async (event) => {
       longDescription: body.description,
       featuresList: body.featureList,
       isActive: body.isActive,
-      isFeatured: body.isFeatured
-    })
+      isFeatured: body.isFeatured,
+    });
 
-    return { message: "Berhasil Menambah Fitur" }
+    return { message: "Berhasil Menambah Fitur" };
   } catch (error) {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to insert features",
+      statusMessage: "Gagal Menambah Fitur",
+      message: (error as Error).message,
       cause: error,
     });
   }
-})
+});

@@ -590,7 +590,7 @@ const onSubmit = form.handleSubmit(async values => {
       }
     } catch (err) {
       console.error(err)
-      toast.error((err as Error).message)
+      toast.error(extractErrorMessage(err))
 
       loading.value = false
       return

@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 useHead({
-  title: "Tambah Fitur - Dashboard",
+  title: "Tambah Fitur",
   meta: [
     {
       name: "description",

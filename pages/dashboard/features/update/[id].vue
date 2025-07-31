@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 useHead({
-  title: "Update Fitur - Dashboard",
+  title: "Update Fitur",
   meta: [
     {
       name: "description",

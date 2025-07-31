@@ -9,7 +9,8 @@ const { setting, loading } = storeToRefs(settingStore);
     <div
       class="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
       <div class="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-        <a
+        <NuxtLink
+          to="/"
           class="flex text-surface-700 dark:text-surface-100 font-medium items-center md:justify-start justify-center">
           <NuxtImg
             class="w-10"
@@ -18,7 +19,7 @@ const { setting, loading } = storeToRefs(settingStore);
           <span class="ml-3 text-xl font-semibold">{{
             setting?.companyName
           }}</span>
-        </a>
+        </NuxtLink>
         <p class="mt-2 text-sm text-surface-700 dark:text-surface-300">
           {{ setting?.moto }}
         </p>
@@ -32,23 +33,23 @@ const { setting, loading } = storeToRefs(settingStore);
           </h2>
           <nav class="list-none mb-10">
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Tentang Kami</a
+              <NuxtLink to="/about" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Tentang Kami</NuxtLink
               >
             </li>
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Layanan</a
+              <NuxtLink to="/features" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Layanan</NuxtLink
               >
             </li>
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Harga / Paket</a
+              <NuxtLink to="/pricing" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Harga / Paket</NuxtLink
               >
             </li>
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Kontak</a
+              <NuxtLink to="/contact" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Kontak</NuxtLink
               >
             </li>
           </nav>
@@ -60,13 +61,13 @@ const { setting, loading } = storeToRefs(settingStore);
           </h2>
           <nav class="list-none mb-10">
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Dokumentasi</a
+              <NuxtLink to="#" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Dokumentasi</NuxtLink
               >
             </li>
             <li>
-              <a class="cursor-pointer text-muted-foreground hover:text-primary"
-                >Blog</a
+              <NuxtLink to="#" class="cursor-pointer text-muted-foreground hover:text-primary"
+                >Blog</NuxtLink
               >
             </li>
           </nav>

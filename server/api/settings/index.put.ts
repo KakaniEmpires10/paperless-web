@@ -2,6 +2,16 @@ import { eq } from "drizzle-orm"
 import { settings } from "~/server/db/schema"
 
 export default defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+
+  // Tambahan cek role
+  if (session.user.role !== "superadmin") {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Anda tidak memiliki permisi untuk melakukan aksi ini",
+    });
+  }
+
   const body = await readBody(event);
 
   if (!body) {

@@ -17,7 +17,7 @@ import { columns } from '~/components/dashboard/messages/column';
 import type { ContactMessages } from '~/server/db/schema';
 
 useHead({
-  title: "Pesan Masuk - Dashboard",
+  title: "Pesan Masuk",
   meta: [
     {
       name: "description",

@@ -3,7 +3,7 @@ const value = defineModel<string>()
 </script>
 
 <template>
-  <div class="bg-muted inline-flex h-10 rounded-lg p-1 shadow shadow-primary">
+  <div class="bg-background inline-flex h-10 rounded-lg p-1 shadow shadow-primary">
     <UiRadioGroup
       v-model="value"
       class="group relative inline-grid grid-cols-[1fr_1fr] items-center gap-0.5 text-sm font-medium after:absolute after:inset-y-1 after:w-[calc(50%-0.125rem)] after:rounded-md after:bg-primary/10 after:backdrop-blur-sm after:border after:border-primary/20 after:shadow-sm after:transition-all after:duration-300 after:ease-out has-focus-visible:after:ring-2 has-focus-visible:after:ring-primary/30 data-[state=rs]:after:translate-x-0 data-[state=klinik]:after:translate-x-[calc(100%+0.125rem)]"

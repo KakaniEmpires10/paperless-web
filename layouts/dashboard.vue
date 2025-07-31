@@ -1,4 +1,5 @@
 <template>
+  <NuxtRouteAnnouncer />
   <UiSidebarProvider>
     <AppSidebar />
     <UiSidebarInset>
@@ -24,4 +25,10 @@
 export const description = "A sidebar that collapses to icons.";
 export const iframeHeight = "800px";
 export const containerClass = "w-full h-full";
+</script>
+
+<script lang="ts" setup>
+useHead({
+  titleTemplate: "%s | Dashboard"
+})
 </script>

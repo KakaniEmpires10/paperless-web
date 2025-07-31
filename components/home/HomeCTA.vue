@@ -39,31 +39,31 @@
 
           <div
             class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <button
-              class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-10 py-4 rounded-2xl font-semibold hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
-              <Icon name="lucide:tag" class="mr-2 inline" />
-              Lihat Paket
-            </button>
-            <button
-              class="border-2 border-border hover:border-primary/50 text-foreground px-10 py-4 rounded-2xl font-semibold hover:bg-accent/50 transition-all duration-300 hover:scale-105">
-              <Icon name="lucide:phone" class="mr-2 inline" />
-              Konsultasi Sekarang
-            </button>
+            <NuxtLink to="/pricing">
+              <button
+                class="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-10 py-4 rounded-2xl flex items-center gap-2 cursor-pointer font-semibold hover:from-primary/90 hover:to-primary/70 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+                <Icon name="lucide:tag" />
+                Lihat Paket
+              </button>
+            </NuxtLink>
+            <NuxtLink to="/contact">
+              <button
+                class="border-2 flex items-center gap-2 cursor-pointer border-primary/60 hover:border-primary/50 text-foreground px-10 py-4 rounded-2xl font-semibold hover:bg-accent/50 transition-all duration-300 hover:scale-105">
+                <Icon name="lucide:phone" />
+                Konsultasi Sekarang
+              </button>
+            </NuxtLink>
           </div>
 
           <!-- Trust Indicators -->
           <div
             class="flex flex-wrap justify-center items-center gap-8 pt-8 opacity-60">
             <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              <Icon name="mdi:shield-check" class="text-green-500" />
-              <span>ISO 27001 Certified</span>
-            </div>
-            <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              <Icon name="mdi:clock-fast" class="text-blue-500" />
+              <Icon name="mdi:clock-fast" class="text-blue-500 text-lg" />
               <span>24/7 Support</span>
             </div>
             <div class="flex items-center gap-2 text-sm text-muted-foreground">
-              <Icon name="mdi:account-group" class="text-purple-500" />
+              <Icon name="mdi:account-group" class="text-purple-500 text-lg" />
               <span>14+ Rumah Sakit</span>
             </div>
           </div>
@@ -73,7 +73,7 @@
   </section>
 </template>
 
-<style scoped>
+<style>
 .bg-texture {
   background-image: url("https://www.transparenttextures.com/patterns/xv.png");
 }

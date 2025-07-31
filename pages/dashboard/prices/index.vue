@@ -3,6 +3,7 @@
     title="Paket"
     description="Halaman ini digunakan untuk melihat list Paket yang disediakan untuk klien perusahaan untuk ditampilkan di halaman depan" />
 
+  <TabsPricingDashboard />
   <DashboardPriceFilter :filters="filters" @reset-filters="resetFilters" />
   <DashboardPriceGrid :prices="filteredPrices" @refresh="refresh" />
 </template>
@@ -12,7 +13,7 @@ import type { PriceFilters } from "~/components/dashboard/price/price.constant";
 import type { PricingPlan } from "~/server/db/schema";
 
 useHead({
-  title: "Paket - Dashboard",
+  title: "Paket",
   meta: [
     {
       name: "description",

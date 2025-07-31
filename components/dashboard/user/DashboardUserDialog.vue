@@ -23,7 +23,9 @@ const loading = ref(false);
 const selectOpen = ref(false);
 const selectedReference = ref("");
 
-const userSchema = !!props.user ? userUpdateSchema : userCreateSchema;
+const userSchema = computed(() =>
+  !!props.user ? userUpdateSchema : userCreateSchema
+);
 
 const cardHeader = computed(() => {
   return {
@@ -163,9 +165,19 @@ const onSubmit = async (values: any) => {
   let res;
 
   try {
+    let type = "standalone";
+    let refId = null;
+
+    if (selectedReferenceData.value) {
+      type = selectedReferenceData.value.type; // "team" / "client"
+      refId = selectedReferenceData.value.value.split("-")[1];
+    }
+
     const submitData = {
-      ...values,
       ...formData.value,
+      password: props.user ? undefined : values.password,
+      type,
+      refId,
     };
 
     if (!!props.user) {
@@ -187,9 +199,7 @@ const onSubmit = async (values: any) => {
     }
   } catch (error) {
     toast.error(
-      error instanceof Error
-        ? error.message
-        : "Terjadi kesalahan saat menyimpan user"
+      extractErrorMessage(error)
     );
   } finally {
     loading.value = false;
@@ -360,9 +370,6 @@ const onSubmit = async (values: any) => {
                         <UiSelectItem value="client">Client</UiSelectItem>
                         <UiSelectItem value="dev">Developer</UiSelectItem>
                         <UiSelectItem value="admin">Admin</UiSelectItem>
-                        <UiSelectItem value="superadmin"
-                          >Super Admin</UiSelectItem
-                        >
                       </UiSelectContent>
                     </UiSelect>
                   </UiFormControl>
@@ -371,11 +378,12 @@ const onSubmit = async (values: any) => {
               </UiFormField>
             </div>
 
-            <UiFormField v-if="!!props.user !== true" v-slot="{ componentField }" name="password">
+            <UiFormField
+              v-if="!!props.user !== true"
+              v-slot="{ componentField }"
+              name="password">
               <UiFormItem>
-                <UiFormLabel>
-                  Password
-                </UiFormLabel>
+                <UiFormLabel> Password </UiFormLabel>
                 <UiFormControl>
                   <UiInput
                     type="password"

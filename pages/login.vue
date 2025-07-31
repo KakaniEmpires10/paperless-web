@@ -5,4 +5,10 @@
 </template>
 
 <script lang="ts" setup>
+useHead({
+  title: "Login",
+  meta: [
+    { name: "description", content: "Halaman Authentikasi aplikasi paperless hospital" }
+  ]
+})
 </script>

@@ -10,13 +10,13 @@ const props = defineProps<{
   class?: HTMLAttributes["class"];
 }>();
 
-const route = useRoute()
+const route = useRoute();
 
 const isLoading = ref(false);
 const email = ref("");
 const password = ref("");
-const alertShow = ref(false)
-const errMessage = ref("")
+const alertShow = ref(false);
+const errMessage = ref("");
 
 const loginSchema = z.object({
   email: z
@@ -29,16 +29,20 @@ const loginSchema = z.object({
     .min(8, { message: "Password Tidak Boleh Kurang dari 8 Karakter" }),
 });
 
-const redirectPath = typeof route.query.redirect === "string" &&
+const redirectPath =
+  typeof route.query.redirect === "string" &&
   route.query.redirect.startsWith("/")
-  ? route.query.redirect
-  : "/dashboard";
+    ? route.query.redirect
+    : "/dashboard";
 
 type loginFormType = z.infer<typeof loginSchema>;
 
 const errors = ref<z.ZodFormattedError<loginFormType> | null>(null);
 
 async function onSubmit() {
+  alertShow.value = false;
+  errMessage.value = "";
+
   const isValid = loginSchema.safeParse({
     email: email.value,
     password: password.value,
@@ -57,7 +61,9 @@ async function onSubmit() {
         await refreshSession();
         await navigateTo(redirectPath);
       })
-      .catch((err) => { errMessage.value = extractErrorMessage(err), alertShow.value = true })
+      .catch(err => {
+        (errMessage.value = extractErrorMessage(err)), (alertShow.value = true);
+      })
       .finally(() => {
         isLoading.value = false;
       });
@@ -144,13 +150,20 @@ const loadingVariants = {
               </Motion>
             </Motion>
 
-            <UiAlert v-if="alertShow" variant="destructive">
-              <AlertCircle />
-              <UiAlertTitle>Error</UiAlertTitle>
-              <UiAlertDescription>
-                {{ errMessage }}
-              </UiAlertDescription>
-            </UiAlert>
+            <Motion
+              v-if="alertShow"
+              :initial="{ opacity: 0, y: -10 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :exit="{ opacity: 0, y: -10 }"
+              :transition="{ duration: 0.3 }">
+              <UiAlert variant="destructive" class="mb-2">
+                <AlertCircle />
+                <UiAlertTitle>Error</UiAlertTitle>
+                <UiAlertDescription>
+                  {{ errMessage }}
+                </UiAlertDescription>
+              </UiAlert>
+            </Motion>
 
             <!-- Email Field -->
             <Motion :variants="itemVariants" class="grid gap-3">

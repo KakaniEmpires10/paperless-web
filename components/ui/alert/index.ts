@@ -14,6 +14,8 @@ export const alertVariants = cva(
           "text-destructive bg-destructive/5 border-destructive [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90",
         warning:
           "text-amber-500 bg-amber-50 border-amber-300 &>svg]:text-current *:data-[slot=alert-description]:text-amber-300",
+        info:
+          "text-sky-500 bg-sky-50 border-sky-300 &>svg]:text-current *:data-[slot=alert-description]:text-sky-300",
       },
     },
     defaultVariants: {

@@ -1,6 +1,8 @@
 import { team } from "../../db/schema"
 
 export default defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+
   const body = await readBody(event)
 
   if (!body) {
@@ -30,8 +32,8 @@ export default defineEventHandler(async (event) => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error',
-      message: 'Failed to insert team member',
+      statusMessage: 'Gagal Menambah Anggota Tim',
+      message: (error as Error).message,
       cause: error
     })
   }

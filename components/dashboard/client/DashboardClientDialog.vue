@@ -78,11 +78,7 @@ const onSubmit = async (values: any) => {
       emit("close");
     }
   } catch (error) {
-    toast.error(
-      error instanceof Error
-        ? error.message
-        : "Terjadi kesalahan saat menyimpan klien"
-    );
+    toast.error(extractErrorMessage(error));
   } finally {
     loading.value = false;
   }

@@ -64,7 +64,10 @@ export const team = mysqlTable("team", {
   id: varchar({ length: 128 })
     .primaryKey()
     .$defaultFn(() => createId()),
-  userId: varchar("user_id", { length: 128 }),
+  userId: varchar("user_id", { length: 128 }).references(() => users.id, {
+    onDelete: "set null", // Jika user dihapus, set null
+    onUpdate: "cascade",
+  }),
   name: varchar("name", { length: 255 }).notNull(),
   position: varchar("position", { length: 255 }).notNull(),
   photo: varchar("photo", { length: 255 }),
@@ -193,7 +196,11 @@ export const clients = mysqlTable("clients", {
   id: varchar("id", { length: 128 })
     .primaryKey()
     .$defaultFn(() => createId()),
-  userId: varchar("user_id", { length: 128 }),
+  userId: varchar("user_id", { length: 128 }).references(() => users.id, {
+    onDelete: "set null", // Jika user dihapus, userId null
+    onUpdate: "cascade",
+  }),
+
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).unique(),
   phone: varchar("phone", { length: 20 }),
@@ -215,12 +222,32 @@ export const pricingPlans = mysqlTable("pricing_plans", {
     .primaryKey()
     .$defaultFn(() => createId()),
   name: varchar("name", { length: 255 }).notNull(),
+  excerpt: varchar("excerpt", { length: 255 }).notNull().default(""),
   description: text("description"),
   type: varchar("type", { length: 100 }).notNull(),
   features: json("features").$type<string[]>().notNull().default([]),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   isPopular: boolean("is_popular").notNull().default(false),
   isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+  order: int("order"),
+});
+
+// ==============================
+// Pricing Demands
+// ==============================
+
+export const pricingDemands = mysqlTable("pricing_demands", {
+  id: varchar({ length: 128 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  name: varchar("name", { length: 255 }).notNull(),
+  instanceName: varchar("instance_name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  address: text("address").notNull(),
+  pricingPlanId: varchar("pricing_plan_id", { length: 128 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
 });
@@ -328,6 +355,15 @@ export const blogCommentsRelations = relations(blogComments, ({ one, many }) => 
 // === pricing Relations ===
 export const pricingPlansRelations = relations(pricingPlans, ({ many }) => ({
   clients: many(clients),
+  pricingDemands: many(pricingDemands),
+}));
+
+// === pricingDemand Relations ===
+export const pricingDemandsRelation = relations(pricingDemands, ({ one }) => ({
+  pricingPlan: one(pricingPlans, {
+    fields: [pricingDemands.pricingPlanId],
+    references: [pricingPlans.id],
+  }),
 }));
 
 // === suggentions Relations ===
@@ -353,6 +389,7 @@ export type Setting = SerializedDate<InferSelectModel<typeof settings>>;
 export type Team = SerializedDate<InferSelectModel<typeof team>>;
 export type Feature = SerializedDate<InferSelectModel<typeof features>>;
 export type PricingPlan = SerializedDate<InferSelectModel<typeof pricingPlans>>;
+export type PricingDemand = SerializedDate<InferSelectModel<typeof pricingDemands>>;
 export type Suggestion = SerializedDate<InferSelectModel<typeof suggestions>>;
 export type Client = SerializedDate<InferSelectModel<typeof clients>>;
 export type ContactMessages= SerializedDate<InferSelectModel<typeof contactMessages>>;
@@ -367,6 +404,7 @@ export type NewSetting = InferInsertModel<typeof settings>;
 export type NewTeam = InferInsertModel<typeof team>;
 export type NewFeature = InferInsertModel<typeof features>;
 export type NewPricingPlan = InferInsertModel<typeof pricingPlans>;
+export type NewPricingDemand = InferInsertModel<typeof pricingDemands>;
 export type NewSuggestion = InferInsertModel<typeof suggestions>;
 export type NewClient = InferInsertModel<typeof clients>;
 export type NewContactMessages = InferInsertModel<typeof contactMessages>;

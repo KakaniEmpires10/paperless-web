@@ -85,10 +85,15 @@
                   >
                     <Heart class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                   </Motion>
-                  <p class="text-foreground leading-relaxed">
+                  <p v-if="props.content == 'contact'" class="text-foreground leading-relaxed">
                     Kami sangat menghargai kepercayaan Anda untuk menghubungi 
                     <span class="font-semibold text-primary">Paperless Hospital</span>. 
                     Tim ahli kami akan segera meninjau pesan Anda.
+                  </p>
+                  <p v-else-if="props.content == 'pricing'" class="text-foreground leading-relaxed">
+                    Kami sangat menghargai kepercayaan Anda untuk memesan salah satu paket 
+                    <span class="font-semibold text-primary">Paperless Hospital</span>. 
+                    Tim ahli kami akan segera meninjau pesanan anda dan menghubungi anda.
                   </p>
                 </Motion>
               </div>
@@ -196,15 +201,17 @@
 <script setup lang="ts">
 import { CheckCircle, Heart, Clock, Mail, Phone } from 'lucide-vue-next';
 
-const COUNT_DOWN_DURATION = 10;
+const COUNT_DOWN_DURATION = 5;
 
 // Props
 interface Props {
   isOpen?: boolean;
+  content?: 'pricing' | 'contact'
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isOpen: false
+  isOpen: false,
+  content: 'contact'
 });
 
 // Emits

@@ -14,6 +14,7 @@ export const pricingSchema = toTypedSchema(
       .min(1, "Nama paket harus diisi")
       .max(255, "Nama paket maksimal 255 karakter"),
 
+    excerpt: z.string().min(1, "Deskripsi singkat wajib diisi"),
     description: z.string().optional(),
 
     type: z
@@ -32,6 +33,8 @@ export const pricingSchema = toTypedSchema(
       .min(1, "Harga Harus Lebih Dari 0"),
 
     isPopular: z.boolean().default(false),
+
+    order: z.coerce.number().default(0),
 
     isActive: z.boolean().default(true),
   })

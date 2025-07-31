@@ -25,7 +25,7 @@ import type { TeamFilters } from '~/components/dashboard/team/team.constant';
 import type { Team } from '~/server/db/schema';
 
 useHead({
-  title: "Tim - Dashboard",
+  title: "Tim",
   meta: [
     {
       name: "description",

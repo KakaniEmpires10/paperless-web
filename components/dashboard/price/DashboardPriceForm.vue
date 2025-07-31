@@ -1,5 +1,20 @@
 <template>
   <form class="space-y-6" @submit="onSubmit">
+    <UiFormField
+        v-slot="{ componentField }"
+        name="order"
+        :validate-on-blur="!isFieldDirty">
+        <UiFormItem class="w-16">
+          <UiFormLabel>Urutan</UiFormLabel>
+          <UiFormControl>
+            <UiInput
+              type="number"
+              placeholder="1..."
+              v-bind="componentField" />
+          </UiFormControl>
+          <UiFormMessage />
+        </UiFormItem>
+      </UiFormField>
     <div
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
       <!-- Nama Paket -->
@@ -61,6 +76,23 @@
 
     <!-- Deskripsi -->
     <UiFormField
+        v-slot="{ componentField }"
+        name="excerpt"
+        :validate-on-blur="!isFieldDirty">
+        <UiFormItem>
+          <UiFormLabel>Deskripsi Singkat</UiFormLabel>
+          <UiFormDescription>Penjelasan singkat untuk dilihat user dalam card pricing di landing page</UiFormDescription>
+          <UiFormControl>
+            <UiInput
+              type="text"
+              placeholder="Deskripsi singkat Paket..."
+              v-bind="componentField" />
+          </UiFormControl>
+          <UiFormMessage />
+        </UiFormItem>
+      </UiFormField>
+
+    <UiFormField
       v-slot="{ componentField }"
       name="description"
       :validate-on-blur="!isFieldDirty">
@@ -68,7 +100,7 @@
         <UiFormLabel>Deskripsi</UiFormLabel>
         <UiFormControl>
           <UiTextarea
-            placeholder="Deskripsi Singkat Paket..."
+            placeholder="Deskripsi lengkap Paket..."
             class="resize-none"
             rows="4"
             v-bind="componentField" />
@@ -195,10 +227,12 @@ const initialValues = {
   name: props.pricing?.name ?? "",
   type: props.pricing?.type ?? "",
   price: parseFloat(props.pricing?.price!) ?? "",
+  excerpt: props.pricing?.excerpt ?? "",
   description: props.pricing?.description ?? "",
   features: initialFeatures,
   isPopular: props.pricing?.isPopular ?? false,
   isActive: props.pricing?.isActive ?? true,
+  order: props.pricing?.order ?? 0
 };
 
 // Form setup
@@ -254,13 +288,7 @@ const onSubmit = handleSubmit(async values => {
     await refreshNuxtData("price");
     navigateTo("/dashboard/prices");
   } catch (error) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    }
-
-    toast.error("Gagal mengupdate pengaturan", {
-      description: "Terjadi kesalahan saat menyimpan pengaturan perusahaan.",
-    });
+    toast.error(extractErrorMessage(error));
   }
 });
 </script>

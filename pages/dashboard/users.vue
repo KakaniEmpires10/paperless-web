@@ -22,7 +22,7 @@ import { columns } from "~/components/dashboard/user/column";
 import type { User } from "~/components/dashboard/user/user.constant";
 
 useHead({
-  title: "User - Dashboard",
+  title: "User",
   meta: [
     {
       name: "description",

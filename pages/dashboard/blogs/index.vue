@@ -16,7 +16,7 @@
 import { AlertCircle } from "lucide-vue-next";
 
 useHead({
-  title: "Blog - Dashboard",
+  title: "Blog",
   meta: [
     {
       name: "description",

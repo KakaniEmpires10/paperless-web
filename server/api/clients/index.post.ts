@@ -1,14 +1,16 @@
 import { clients } from "~/server/db/schema";
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
+  const session = await requireUserSession(event);
+
   const body = await readBody(event);
 
   if (!body) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Bad Request',
-      message: 'Request body is required'
-    })
+      statusMessage: "Bad Request",
+      message: "Request body is required",
+    });
   }
 
   try {
@@ -26,9 +28,9 @@ export default defineEventHandler(async (event) => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to insert client",
+      statusMessage: "Gagal Menambah Data Klien",
+      message: (error as Error).message,
       cause: error,
     });
   }
-})
+});

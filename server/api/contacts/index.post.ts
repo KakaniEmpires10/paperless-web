@@ -26,8 +26,8 @@ export default defineEventHandler(async (event) => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Internal Server Error",
-      message: "Failed to insert Message",
+      statusMessage: "Pesan Gagal Terkirim",
+      message: (error as Error).message,
       cause: error,
     });
   }

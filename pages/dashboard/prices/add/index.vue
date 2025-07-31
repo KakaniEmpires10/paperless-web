@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: "Tambah Paket - Dashboard",
+  title: "Tambah Paket",
   meta: [
     {
       name: "description",

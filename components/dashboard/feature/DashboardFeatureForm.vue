@@ -245,13 +245,7 @@ const onSubmit = handleSubmit(async values => {
     await refreshNuxtData("features");
     navigateTo("/dashboard/features");
   } catch (error) {
-    if (error instanceof Error) {
-      toast.error(error.message);
-    }
-
-    toast.error("Gagal mengupdate fitur", {
-      description: "Terjadi kesalahan saat menyimpan fitur perusahaan.",
-    });
+    toast.error(extractErrorMessage(error));
   }
 })
 </script>

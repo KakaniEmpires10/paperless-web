@@ -10,8 +10,8 @@ export default defineEventHandler(async (event) => {
     console.log(error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error',
-      message: 'Failed to process request',
+      statusMessage: "Gagal Mengambil Data Tim",
+      message: (error as Error).message,
       cause: error
     })
   }

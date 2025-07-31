@@ -8,7 +8,27 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "Paperless Hospital",
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
+      meta: [
+        {
+          name: "description",
+          content:
+            "Paperless Hospital membantu rumah sakit di Indonesia menjadi lebih efisien dalam pelayanan dan manajemen serta lebih modern dengan teknologi AI tercanggih untuk mendigitalisasi layanan kesehatan secara menyeluruh.",
+        },
+        {
+          name: "keywords",
+          content:
+            "digitalisasi rumah sakit, AI untuk rumah sakit, sistem informasi rumah sakit, HMS Indonesia, paperless hospital, teknologi kesehatan, transformasi digital rumah sakit",
+        },
+        {
+          property: "og:title",
+          content: "Paperless Hospital",
+        },
+        {
+          property: "og:description",
+          content:
+            "Paperless Hospital membantu rumah sakit di Indonesia menjadi lebih efisien dalam pelayanan dan manajemen serta lebih modern dengan teknologi AI tercanggih untuk mendigitalisasi layanan kesehatan secara menyeluruh.",
+        }
+      ],
     },
   },
 
@@ -17,7 +37,7 @@ export default defineNuxtConfig({
       uploads: {
         driver: "fs",
         base: "./public/uploads",
-      }
+      },
     },
   },
 
@@ -30,6 +50,7 @@ export default defineNuxtConfig({
     "motion-v/nuxt",
     "nuxt-auth-utils",
     "@pinia/nuxt",
+    "@nuxtjs/seo",
   ],
 
   runtimeConfig: {
@@ -37,6 +58,29 @@ export default defineNuxtConfig({
       maxAge: 60 * 60 * 24 * 3, // 3 days
       password: "",
     },
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    },
+  },
+
+  ogImage: {
+    enabled: false,
+  },
+
+  seo: {
+    // seo utils
+    enabled: false,
+  },
+  schemaOrg: {
+    enabled: false,
+  },
+
+  sitemap: {
+    exclude: ["/dashboard/**", "/login"],
+  },
+
+  robots: {
+    disallow: ["/dashboard"],
   },
 
   imports: {
