@@ -115,7 +115,7 @@
                 </div>
                 <div>
                   <p class="font-semibold text-gray-900">Emergency IT Helpdesk</p>
-                  <p class="text-green-600 font-medium">(555) 123-4567</p>
+                  <p class="text-green-600 font-medium">+6285296113088</p>
                 </div>
               </a>
               
@@ -125,7 +125,7 @@
                 </div>
                 <div>
                   <p class="font-semibold text-gray-900">Email Support</p>
-                  <p class="text-blue-600 font-medium">support@hospital.com</p>
+                  <p class="text-blue-600 font-medium">yudyoo7@gmail.com</p>
                 </div>
               </a>
             </div>
