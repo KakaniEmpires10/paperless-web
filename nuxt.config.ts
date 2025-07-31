@@ -27,7 +27,7 @@ export default defineNuxtConfig({
           property: "og:description",
           content:
             "Paperless Hospital membantu rumah sakit di Indonesia menjadi lebih efisien dalam pelayanan dan manajemen serta lebih modern dengan teknologi AI tercanggih untuk mendigitalisasi layanan kesehatan secara menyeluruh.",
-        }
+        },
       ],
     },
   },
@@ -36,7 +36,7 @@ export default defineNuxtConfig({
     storage: {
       uploads: {
         driver: "fs",
-        base: "./public/uploads",
+        base: process.env.STORAGE_PATH || "./public/uploads",
       },
     },
   },
